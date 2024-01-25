@@ -1,5 +1,8 @@
 <script lang="ts">
-    //import bootstrap from 'bootstrap'
+    import { browser } from '$app/environment'
+
+    if (browser)
+        window.location.href = "/login";
 </script>
 
 <h1>Welcome to SvelteKit</h1>
