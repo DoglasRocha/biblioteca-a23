@@ -1,27 +1,26 @@
-<script lang="ts">
-
+<script>
 </script>
 
 <div class="main-wrapper">
-    <slot></slot>
+	<slot />
 </div>
 
 <style>
-    :global(*) {
-        padding: 0;
-        margin: 0;
-    }
+	:global(*) {
+		padding: 0;
+		margin: 0;
+	}
 
-    :global(body) {
-        background-color: #F6CE5F;
-    }
+	:global(body) {
+		background-color: #f6ce5f;
+	}
 
-    .main-wrapper {
-        min-height: 100vh;
-        min-width: 100vw;
-        display: flex;
-        justify-content:space-around;
-        align-items: center;
-        flex-direction: column;
-    }
+	.main-wrapper {
+		min-height: 100vh;
+		min-width: 100vw;
+		display: flex;
+		justify-content: space-around;
+		align-items: center;
+		flex-direction: column;
+	}
 </style>
