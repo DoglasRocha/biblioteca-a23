@@ -1,4 +1,5 @@
 <script lang="ts">
+	import FormField from '$lib/components/form-field.svelte';
 </script>
 
 <div class="card">
@@ -11,11 +12,11 @@
 
 		<div class="mt-3">
 			<label for="email" class="form-label">Endereço de Email</label>
-			<input type="email" name="email" id="" class="form-control" />
+			<input type="email" name="email" class="form-control" />
 		</div>
 		<div class="mt-3">
 			<label for="senha" class="form-label">Senha</label>
-			<input type="password" name="senha" id="" class="form-control" />
+			<input type="password" name="senha" class="form-control" />
 		</div>
 		<div class="buttons mt-3">
 			<a class="btn btn-secondary" href="/cadastro"> Cadastrar </a>
@@ -26,6 +27,7 @@
 				}}>Login</button
 			>
 		</div>
+		<FormField></FormField>
 	</div>
 </div>
 
