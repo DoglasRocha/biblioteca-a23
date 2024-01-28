@@ -25,6 +25,7 @@ Parameters:
 <div class="mt-3">
 	<label for={name} class="form-label">{label}</label>
 	<input
+		{...$$restProps}
 		{name}
 		id={name}
 		{type}
