@@ -34,8 +34,11 @@
 			<button
 				class="btn btn-primary"
 				type="submit"
-				on:click={(e) => {
-					e.preventDefault();
+				on:click={() => {
+					if (email && senha) {
+						document.cookie = 'logged=true';
+						document.location.href = '/';
+					}
 				}}>Login</button
 			>
 		</div>

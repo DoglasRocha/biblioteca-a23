@@ -88,7 +88,13 @@
 		/>
 
 		<div class="mt-3 d-flex justify-content-end">
-			<button type="submit" class="btn btn-primary">Cadastrar</button>
+			<button
+				type="submit"
+				class="btn btn-primary"
+				on:click={() => {
+					document.location.href = '/login';
+				}}>Cadastrar</button
+			>
 		</div>
 	</form>
 </Card>
