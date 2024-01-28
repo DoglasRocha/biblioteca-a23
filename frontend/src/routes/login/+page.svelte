@@ -18,25 +18,28 @@
 		<h3>Login</h3>
 	</div>
 
-	<FormField
-		label="Endereço de Email"
-		name="email"
-		type="email"
-		bind:value={email}
-		placeholder="exemplo@email.com"
-	/>
+	<form>
+		<FormField
+			label="Endereço de Email"
+			name="email"
+			type="email"
+			bind:value={email}
+			placeholder="exemplo@email.com"
+			required
+		/>
 
-	<FormField label="Senha" name="senha" type="password" bind:value={senha} />
-
-	<div class="buttons mt-3">
-		<a class="btn btn-secondary" href="/cadastro"> Cadastrar </a>
-		<button
-			class="btn btn-primary"
-			on:click={() => {
-				console.log(email);
-			}}>Login</button
-		>
-	</div>
+		<FormField label="Senha" name="senha" type="password" bind:value={senha} required />
+		<div class="buttons mt-3">
+			<a class="btn btn-secondary" href="/cadastro"> Cadastrar </a>
+			<button
+				class="btn btn-primary"
+				type="submit"
+				on:click={(e) => {
+					e.preventDefault();
+				}}>Login</button
+			>
+		</div>
+	</form>
 </Card>
 
 <style>
