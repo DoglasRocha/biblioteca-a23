@@ -1,11 +1,12 @@
 <script>
-	import Navbar from '../../lib/components/navbar.svelte';
+	import Navbar from '$lib/components/navbar.svelte';
+	import Footer from '$lib/components/footer.svelte';
 </script>
 
 <div class="main-wrapper">
 	<Navbar />
 	<slot />
-	<Navbar />
+	<Footer />
 </div>
 
 <style>
@@ -22,7 +23,7 @@
 		min-height: 100vh;
 		min-width: 100vw;
 		display: flex;
-		justify-content: space-around;
+		justify-content: space-between;
 		align-items: center;
 		flex-direction: column;
 	}
