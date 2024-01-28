@@ -1,6 +1,6 @@
 <script>
 	import FormField from '$lib/components/form-field.svelte';
-	import Card from '../../lib/components/card.svelte';
+	import Card from '../../../lib/components/card.svelte';
 
 	let userData = {
 		firstName: '',

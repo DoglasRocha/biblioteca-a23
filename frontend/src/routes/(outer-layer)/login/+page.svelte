@@ -1,10 +1,10 @@
 <script>
 	import FormField from '$lib/components/form-field.svelte';
-	import Card from '../../lib/components/card.svelte';
+	import Card from '$lib/components/card.svelte';
 	//import Logo from '/logo.png';
 
 	let email = '',
-		senha = '';
+		password = '';
 </script>
 
 <Card>
@@ -28,14 +28,14 @@
 			required
 		/>
 
-		<FormField label="Senha" name="senha" type="password" bind:value={senha} required />
+		<FormField label="Senha" name="senha" type="password" bind:value={password} required />
 		<div class="buttons mt-3">
 			<a class="btn btn-secondary" href="/cadastro"> Cadastrar </a>
 			<button
 				class="btn btn-primary"
 				type="submit"
 				on:click={() => {
-					if (email && senha) {
+					if (email && password) {
 						document.cookie = 'logged=true';
 						document.location.href = '/';
 					}
