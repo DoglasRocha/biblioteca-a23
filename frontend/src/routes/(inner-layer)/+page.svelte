@@ -12,27 +12,27 @@
 		livros do nosso acervo.
 	</p>
 	<p>
-		Para procurar um livro para emprestar, clique em <a href="/emprestar" class="text-secondary"
+		Para procurar um livro para emprestar, clique em <a href="/buscar" class="text-black fw-bold"
 			>Buscar Livro</a
 		> na barra de navegação.
 	</p>
 	<p>
 		Para verificar seu histórico de empréstimos, clique em <a
 			href="/historico"
-			class="text-secondary">Histórico</a
+			class="text-black fw-bold">Histórico</a
 		> na barra de navegação.
 	</p>
 	<p>
 		Para renovar o livro que você está emprestando atualmente, clique em <a
 			href="/renovar"
-			class="text-secondary">Renovar</a
+			class="text-black fw-bold">Renovar</a
 		> na barra de navegação.
 	</p>
 </Card>
 
 <style>
 	:global(.max-width-60) {
-		max-width: 60%;
+		width: 60%;
 	}
 
 	.logo {
