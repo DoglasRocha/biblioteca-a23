@@ -29,8 +29,16 @@
 							<ul>
 								<li>Gênero: aaaa</li>
 								<li>Exemplares disponíveis: 10</li>
+								<li>
+									Descrição: <p>
+										Lorem ipsum dolor sit, amet consectetur adipisicing elit. Laborum repellat
+										recusandae praesentium quae magni quaerat necessitatibus commodi expedita
+										maiores. Mollitia blanditiis numquam reprehenderit ex iste inventore, nobis
+										repudiandae hic dolorum.
+									</p>
+								</li>
 							</ul>
-							<button class="btn btn-dark">Emprestar</button>
+							<a href="/emprestar/1" class="btn btn-dark">Emprestar</a>
 						</details>
 					</td>
 				</tr>
@@ -41,8 +49,15 @@
 							<ul>
 								<li>Gênero: bbbb</li>
 								<li>Exemplares disponíveis: 5</li>
+								<li>
+									Descrição: <p>
+										Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam doloribus aut
+										nesciunt, cum quia officia recusandae doloremque animi est numquam dicta esse
+										blanditiis voluptatum rem accusamus totam ipsa dolorem labore!
+									</p>
+								</li>
 							</ul>
-							<button class="btn btn-dark">Emprestar</button>
+							<a href="/emprestar/2" class="btn btn-dark">Emprestar</a>
 						</details>
 					</td></tr
 				>
