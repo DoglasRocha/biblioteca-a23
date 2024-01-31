@@ -27,10 +27,11 @@
 						<details>
 							<summary> João e o Pé de Feijão </summary>
 							<ul>
-								<li>Gênero: aaaa</li>
-								<li>Exemplares disponíveis: 10</li>
+								<li><span class="fw-bold"> Gênero: </span>aaaa</li>
+								<li><span class="fw-bold">Exemplares disponíveis: </span>10</li>
 								<li>
-									Descrição: <p>
+									<span class="fw-bold">Descrição: </span>
+									<p>
 										Lorem ipsum dolor sit, amet consectetur adipisicing elit. Laborum repellat
 										recusandae praesentium quae magni quaerat necessitatibus commodi expedita
 										maiores. Mollitia blanditiis numquam reprehenderit ex iste inventore, nobis
@@ -38,7 +39,9 @@
 									</p>
 								</li>
 							</ul>
-							<a href="/emprestar/1" class="btn btn-dark">Emprestar</a>
+							<div class="d-flex justify-content-end">
+								<a href="/emprestar/1" class="btn btn-dark">Emprestar</a>
+							</div>
 						</details>
 					</td>
 				</tr>
@@ -47,17 +50,20 @@
 						><details>
 							<summary> Manifesto Comunista </summary>
 							<ul>
-								<li>Gênero: bbbb</li>
-								<li>Exemplares disponíveis: 5</li>
+								<li><span class="fw-bold">Gênero: </span>bbbb</li>
+								<li><span class="fw-bold">Exemplares disponíveis: </span>5</li>
 								<li>
-									Descrição: <p>
+									<span class="fw-bold">Descrição: </span>
+									<p>
 										Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam doloribus aut
 										nesciunt, cum quia officia recusandae doloremque animi est numquam dicta esse
 										blanditiis voluptatum rem accusamus totam ipsa dolorem labore!
 									</p>
 								</li>
 							</ul>
-							<a href="/emprestar/2" class="btn btn-dark">Emprestar</a>
+							<div class="d-flex justify-content-end">
+								<a href="/emprestar/2" class="btn btn-dark">Emprestar</a>
+							</div>
 						</details>
 					</td></tr
 				>
