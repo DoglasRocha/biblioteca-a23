@@ -30,7 +30,7 @@
 
 		<FormField label="Senha" name="senha" type="password" bind:value={password} required />
 		<div class="buttons mt-3">
-			<a class="btn btn-secondary" href="/cadastro"> Cadastrar </a>
+			<a class="btn btn-secondary" href="/admin/cadastro"> Cadastrar </a>
 			<button
 				class="btn btn-primary"
 				type="submit"
