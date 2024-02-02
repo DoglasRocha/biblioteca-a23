@@ -7,10 +7,10 @@
 		<a class="nav-link fw-bold" href="/admin">Home</a>
 	</li>
 	<li class="nav-item">
-		<a class="nav-link fw-bold" href="/admin/buscarlivro">Buscar livro</a>
+		<a class="nav-link fw-bold" href="/admin/buscar">Buscar livro</a>
 	</li>
 	<li class="nav-item">
-		<a class="nav-link fw-bold" href="/admin/cadastrarlivro">Cadastrar livro</a>
+		<a class="nav-link fw-bold" href="/admin/cadastrar">Cadastrar livro</a>
 	</li>
 	<li class="nav-item dropdown">
 		<button class="nav-link dropdown-toggle fw-bold" data-bs-toggle="dropdown">Empréstimos</button>
