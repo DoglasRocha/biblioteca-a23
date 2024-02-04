@@ -1,7 +1,7 @@
 <script>
 </script>
 
-<div class={'card ' + ($$restProps.class ?? '')}>
+<div class={'card my-5 ' + ($$restProps.class ?? '')}>
 	<slot name="header" />
 	<slot name="image" />
 	<div class="card-body">
