@@ -5,6 +5,7 @@
 	export let placeholder = '';
 	export let value = '';
 	export let required = false;
+	console.log(type);
 </script>
 
 <!--
@@ -28,11 +29,9 @@ Parameters:
 		{...$$restProps}
 		{name}
 		id={name}
-		{type}
+		{...{ type }}
 		{placeholder}
-		on:input={(e) => {
-			value = e.target.value;
-		}}
+		bind:value
 		class={'form-control ' + ($$restProps.class ?? '')}
 		{required}
 	/>
