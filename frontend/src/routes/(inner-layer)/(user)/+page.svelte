@@ -3,7 +3,7 @@
 	import Link from '$lib/components/link.svelte';
 </script>
 
-<Card class="max-width-60">
+<Card class="w-60">
 	<h1 class="text-center">Biblioteca do Cursinho A23</h1>
 	<div class="d-flex justify-content-center">
 		<img src="/logo.png" alt="Logo do Cursinho A23" class="logo" />
@@ -28,7 +28,7 @@
 </Card>
 
 <style>
-	:global(.max-width-60) {
+	:global(.w-60) {
 		width: 60%;
 	}
 

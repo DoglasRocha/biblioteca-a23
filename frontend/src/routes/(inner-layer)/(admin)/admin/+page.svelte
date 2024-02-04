@@ -4,7 +4,7 @@
 	import Link from '$lib/components/link.svelte';
 </script>
 
-<Card class="w-75">
+<Card class="w-60">
 	<h1 class="text-center">Administração</h1>
 	<BigLogo />
 	<p class="mt-3">
@@ -28,14 +28,10 @@
 		clique em <Link href="#top">Empréstimos</Link> e em seguida na opção subsequente desejada, na barra
 		de navegação.
 	</p>
-	<p>
-		Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo ab repellat unde vel provident,
-		deleniti autem non qui, quos voluptatibus eveniet quaerat dolorem in tempore sed, minima
-		adipisci totam recusandae!
-	</p>
-	<p>
-		Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sunt, consequuntur tempora. Obcaecati,
-		dolore cum veritatis qui facere veniam! Aspernatur, error! Officiis ex dicta aliquam ipsa
-		voluptatibus nostrum odit consectetur magni!
-	</p>
 </Card>
+
+<style>
+	:global(.w-60) {
+		width: 60%;
+	}
+</style>
