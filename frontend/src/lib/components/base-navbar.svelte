@@ -1,9 +1,10 @@
 <script>
+	export let brandLink = '/';
 </script>
 
 <nav class="navbar navbar-expand-lg w-100 bg-body-tertiary">
 	<div class="container-fluid">
-		<a href="/">
+		<a href={brandLink}>
 			<img class="navbar-brand logo" src="/logo-menor.png" alt="Logo do Cursinho Popular A23" />
 		</a>
 		<button

@@ -17,9 +17,9 @@
 
 	.main-wrapper {
 		min-height: 100vh;
-		min-width: 100vw;
+		/*min-width: 100vw;*/
 		display: flex;
-		justify-content: space-around;
+		justify-content: space-between;
 		align-items: center;
 		flex-direction: column;
 	}

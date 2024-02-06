@@ -1,8 +1,9 @@
 <script>
 	import Card from '$lib/components/card.svelte';
+	import Link from '$lib/components/link.svelte';
 </script>
 
-<Card class="max-width-60">
+<Card class="w-60">
 	<h1 class="text-center">Biblioteca do Cursinho A23</h1>
 	<div class="d-flex justify-content-center">
 		<img src="/logo.png" alt="Logo do Cursinho A23" class="logo" />
@@ -12,26 +13,22 @@
 		livros do nosso acervo.
 	</p>
 	<p>
-		Para procurar um livro para emprestar, clique em <a href="/buscar" class="text-black fw-bold"
-			>Buscar Livro</a
-		> na barra de navegação.
+		Para procurar um livro para emprestar, clique em <Link href="/buscar">Buscar Livro</Link> na barra
+		de navegação.
 	</p>
 	<p>
-		Para verificar seu histórico de empréstimos, clique em <a
-			href="/historico"
-			class="text-black fw-bold">Histórico</a
-		> na barra de navegação.
+		Para verificar seu histórico de empréstimos, clique em <Link href="/historico">Histórico</Link> na
+		barra de navegação.
 	</p>
 	<p>
-		Para renovar o livro que você está emprestando atualmente, clique em <a
-			href="/renovar"
-			class="text-black fw-bold">Renovar</a
+		Para renovar o livro que você está emprestando atualmente, clique em <Link href="/renovar"
+			>Renovar</Link
 		> na barra de navegação.
 	</p>
 </Card>
 
 <style>
-	:global(.max-width-60) {
+	:global(.w-60) {
 		width: 60%;
 	}
 
