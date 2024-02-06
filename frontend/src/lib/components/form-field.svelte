@@ -5,7 +5,6 @@
 	export let placeholder = '';
 	export let value = '';
 	export let required = false;
-	console.log(type);
 </script>
 
 <!--

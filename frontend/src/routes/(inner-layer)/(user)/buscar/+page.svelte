@@ -1,19 +1,12 @@
 <script>
 	import Card from '$lib/components/card.svelte';
+	import SearchBar from '$lib/components/search-bar.svelte';
 </script>
 
 <Card class="w-75">
 	<h1 class="text-center">Buscar livro</h1>
 	<div class="d-flex justify-content-center mt-5">
-		<form class="d-flex w-90" role="search">
-			<input
-				class="form-control me-2"
-				type="search"
-				placeholder="Pesquisar livro"
-				aria-label="Search"
-			/>
-			<button class="btn btn-outline-success" type="submit">Buscar</button>
-		</form>
+		<SearchBar placeholder="Pesquisar livro" />
 	</div>
 	<div class="w-90"></div>
 	<div class="d-flex justify-content-center mt-5 px-5">
