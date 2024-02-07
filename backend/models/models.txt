@@ -1,0 +1,45 @@
+
+reader {
+	user_id integer pk > user.id
+	birth_date date
+	address text
+	phone_number varchar(20)
+}
+
+user {
+	id integer pk increments
+	name varchar(50)
+	surname varchar(100)
+	email varchar(100) unique
+	password varchar(255)
+}
+
+admin {
+	user_id integer pk > user.id
+	is_cleared boolean
+}
+
+book {
+	id integer pk increments
+	name varchar(100)
+	isbn varchar(20) null
+	description text null
+	gender varchar(30)
+	copies integer def(1)
+}
+
+copy {
+	id integer pk increments
+	book_id integer *> book.id
+}
+
+loan {
+	id integer pk increments
+	copy_id integer *> copy.id
+	reader_id integer *> reader.user_id
+	start_date date
+	finish_date date
+	has_renewed boolean def(0)
+	has_returned boolean def(0)
+	is_authorized boolean def(0)
+}
