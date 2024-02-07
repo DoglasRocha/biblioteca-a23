@@ -20,7 +20,7 @@ func main() {
 	}
 
 	//fmt.Println(user)
-	fmt.Println(models.ValidateUserData(&user, validate))
+	fmt.Println(user.Validate(validate))
 
 	// teste hash
 	var teste string = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"

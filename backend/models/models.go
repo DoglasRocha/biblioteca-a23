@@ -17,13 +17,13 @@ type User struct {
 
 type Reader struct {
 	gorm.Model
-	UserID      int       ``
+	UserID      int       `json:"user_id" validate:"required"`
 	User        User      ``
-	Birthday    time.Time ``
-	Address     string    `gorm:"type:text"`
-	PhoneNumber string    ``
+	Birthday    time.Time `json:"birthday" validate:"required,datetime" gorm:"type:date"`
+	Address     string    `json:"address" validate:"required" gorm:"type:text"`
+	PhoneNumber string    `json:"phone_number" validate:"required" gorm:"type:varchar(20)"`
 }
 
-func ValidateUserData(user *User, validate *validator.Validate) error {
-	return validate.Struct(user)
+func (user *User) Validate(validator *validator.Validate) error {
+	return validator.Struct(user)
 }
