@@ -3,14 +3,16 @@ package main
 import (
 	"fmt"
 
+	"biblioteca-a23/database"
 	"biblioteca-a23/models"
 	"github.com/go-playground/validator/v10"
 	"golang.org/x/crypto/bcrypt"
 )
 
+var validate *validator.Validate = validator.New(validator.WithRequiredStructEnabled())
+
 func main() {
 	// teste validator
-	var validate *validator.Validate = validator.New(validator.WithRequiredStructEnabled())
 
 	user := models.User{
 		Name:     "Doglas",
@@ -32,4 +34,9 @@ func main() {
 	}
 
 	fmt.Print(string(hash))
+
+	// teste database
+	db, err := database.ConnectToDatabase()
+
+	fmt.Println(db.First(&user, 1))
 }
