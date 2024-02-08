@@ -1,19 +1,29 @@
 package main
 
 import (
-	"fmt"
-
-	"golang.org/x/crypto/bcrypt"
+	"biblioteca-a23/database"
+	//"biblioteca-a23/models"
+	//"fmt"
+	"github.com/go-playground/validator/v10"
 )
 
-func main() {
-	var teste string = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+var validate *validator.Validate = validator.New(validator.WithRequiredStructEnabled())
 
-	hash, err := bcrypt.GenerateFromPassword([]byte(teste), bcrypt.MinCost)
+func main() {
+
+	// teste database
+	db, err := database.ConnectToDatabase()
 
 	if err != nil {
-		panic("aaaaa")
+		panic("erro na conexao")
 	}
 
-	fmt.Print(string(hash))
+	database.MakeMigration(db)
+
+	// db.Create(&models.User{Name: "Doglas", Surname: "Rocha", Email: "doglas", Password: "rocha"})
+	/*var user models.User
+	db.First(&user)
+	fmt.Println(user)
+
+	db.Delete(&user)*/
 }
