@@ -24,6 +24,22 @@ type Reader struct {
 	PhoneNumber string    `json:"phone_number" validate:"required" gorm:"type:varchar(20)"`
 }
 
+type Admin struct {
+	gorm.Model
+	UserID    int `json:"user_id"`
+	User      User
+	IsCleared bool `json:"is_creared" validate:"required" gorm:"type:boolean"`
+}
+
+type Book struct {
+	gorm.Model
+	Name        string  `json:"name" validate:"required,lte=3" gorm:"type:varchar(100)"`
+	ISBN        *string `json:"isbn" gorm:"type:varchar(20)"`
+	Description string  `json:"description" gorm:"type:text"`
+	Gender      string  `json:"gender" gorm:"type:varchar(30)"`
+	Copies      int     `json:"copies" gorm:"default:1"`
+}
+
 func (user *User) Validate(validator *validator.Validate) error {
 	return validator.Struct(user)
 }
