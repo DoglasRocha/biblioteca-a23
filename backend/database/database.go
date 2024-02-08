@@ -10,9 +10,13 @@ import (
 	"gorm.io/gorm"
 )
 
-func ConnectToDatabase() (*gorm.DB, error) {
-	err := godotenv.Load("database/.env")
+var (
+	DB  *gorm.DB
+	err error
+)
 
+func ConnectToDatabase() {
+	err := godotenv.Load("database/.env")
 	if err != nil {
 		panic("Error loading .env file")
 	}
@@ -23,13 +27,11 @@ func ConnectToDatabase() (*gorm.DB, error) {
 		os.Getenv("MYSQL_PASSWORD"),
 	)
 
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-
-	return db, err
+	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 }
 
-func MakeMigration(db *gorm.DB) {
-	db.AutoMigrate(
+func MakeMigration() {
+	DB.AutoMigrate(
 		&m.User{},
 		&m.Reader{},
 		&m.Admin{},
