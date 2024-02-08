@@ -47,17 +47,24 @@
 		/>
 		<FormField
 			name="password"
-			label="Senha"
+			label="Senha Antiga"
 			bind:value={userData.password}
 			type="password"
 			required
 		/>
 		<FormField
 			name="password-confirmation"
-			label="Confirmação da senha"
+			label="Senha antiga"
 			bind:value={passwordConfirmation}
 			type="password"
 			required
+		/>
+		<FormField
+		name="password-confirmation"
+		label="Nova Senha"
+		bind:value={passwordConfirmation}
+		type="password"
+		required
 		/>
 		<div class="mt-3 d-flex justify-content-end">
 			<button
