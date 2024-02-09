@@ -47,21 +47,14 @@
 		/>
 		<FormField
 			name="password"
-			label="Senha Antiga"
+			label="Senha "
 			bind:value={userData.password}
 			type="password"
 			required
 		/>
 		<FormField
-			name="password-confirmation"
-			label="Senha antiga"
-			bind:value={passwordConfirmation}
-			type="password"
-			required
-		/>
-		<FormField
 		name="password-confirmation"
-		label="Nova Senha"
+		label="Confirmação de senha"
 		bind:value={passwordConfirmation}
 		type="password"
 		required
