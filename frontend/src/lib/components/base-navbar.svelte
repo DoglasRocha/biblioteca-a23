@@ -18,11 +18,16 @@
 		>
 			<span class="navbar-toggler-icon"></span>
 		</button>
+
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 				<slot />
 			</ul>
 		</div>
+			<div class="d-flex align-items-center p-2">
+			<i class="fa-solid fa-circle-user me-1"></i>
+			<a class="nav-link fw-bold" href="/minhaconta">Minha Conta</a>
+			</div>
 	</div>
 </nav>
 
@@ -31,3 +36,7 @@
 		width: 75px;
 	}
 </style>
+
+
+
+
