@@ -27,7 +27,7 @@ type Reader struct {
 	ID          uint/*`json:"id" */ `gorm:"primary_key"`
 	UserID      uint/*`json:"user_id" */ `validate:"required"`
 	User        User
-	Birthday    time.Time `json:"birthday" validate:"required,regexp=^\d\d-\d\d-\d\d\d\d$" gorm:"type:date"`
+	Birthday    time.Time `json:"birthday" validate:"required" gorm:"type:date"`
 	Address     string    `json:"address" validate:"required" gorm:"type:text"`
 	PhoneNumber string    `json:"phone_number" validate:"required" gorm:"type:varchar(20)"`
 	Loans       []Loan
