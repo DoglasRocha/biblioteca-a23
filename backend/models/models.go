@@ -13,7 +13,7 @@ type User struct {
 	Name     string `json:"name" validate:"required,gte=3,lte=50" gorm:"type:varchar(50)"`
 	Surname  string `json:"surname" validate:"required,gte=3,lte=100" gorm:"type:varchar(100)"`
 	Email    string `json:"email" validate:"required,email" gorm:"type:varchar(100);unique"`
-	Password string `json:"password" validate:"required,lte=8" gorm:"type:varchar(255)"`
+	Password string `json:"password" validate:"required,gte=8" gorm:"type:varchar(255)"`
 }
 
 func (user *User) Validate(validator *validator.Validate) error {
@@ -22,8 +22,8 @@ func (user *User) Validate(validator *validator.Validate) error {
 
 type Reader struct {
 	gorm.Model
-	ID          uint `json:"id" gorm:"primary_key"`
-	UserID      uint `json:"user_id" validate:"required"`
+	ID          uint/*`json:"id" */ `gorm:"primary_key"`
+	UserID      uint/*`json:"user_id" */ `validate:"required"`
 	User        User
 	Birthday    time.Time `json:"birthday" validate:"required,datetime" gorm:"type:date"`
 	Address     string    `json:"address" validate:"required" gorm:"type:text"`
