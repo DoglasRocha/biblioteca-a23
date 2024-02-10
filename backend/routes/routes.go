@@ -9,11 +9,13 @@ import (
 	//"fmt"
 
 	"github.com/gorilla/mux"
+	"github.com/rs/cors"
 )
 
 func SetupRoutes() {
 	router := mux.NewRouter()
-	router.HandleFunc("/api/cadastro", controllers.CreateReader)
+	router.HandleFunc("/api/cadastro", controllers.CreateReader).Methods("POST")
 
-	log.Fatal(http.ListenAndServe(":8080", router))
+	handler := cors.Default().Handler(router)
+	log.Fatal(http.ListenAndServe(":8080", handler))
 }
