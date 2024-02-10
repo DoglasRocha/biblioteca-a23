@@ -22,12 +22,12 @@ func create_user(request_body []byte) (models.User, error) {
 	}
 
 	var password_hash []byte
-	password_hash, err = bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.MinCost)
+	password_hash, err = bcrypt.GenerateFromPassword([]byte(*user.Password), bcrypt.MinCost)
 	if err != nil {
 		return user, err
 	}
 
-	user.Password = string(password_hash)
+	*user.Password = string(password_hash)
 
 	err = database.DB.Create(&user).Error
 	if err != nil {

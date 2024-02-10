@@ -3,6 +3,7 @@ package controllers
 import (
 	//"biblioteca-a23/database"
 	"biblioteca-a23/models"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -22,14 +23,9 @@ func CreateReader(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Fprintln(w, reader)
-	// err = json.Unmarshal(body, &reader)
-	// if err != nil {
-	// 	fmt.Fprintln(w, err)
-	// }
-
-	// fmt.Println(reader)
-
-	// fmt.Fprintln(w, reader)
-
+	// hides password from response
+	reader.User.Password = nil
+	w.Header().Add("Set-Cookie", "boa tarde")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(reader)
 }

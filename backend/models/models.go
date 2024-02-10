@@ -11,11 +11,11 @@ var Validator *validator.Validate = validator.New(validator.WithRequiredStructEn
 
 type User struct {
 	gorm.Model
-	ID       uint   `json:"id" gorm:"primary_key"`
-	Name     string `json:"name" validate:"required,gte=3,lte=50" gorm:"type:varchar(50)"`
-	Surname  string `json:"surname" validate:"required,gte=3,lte=100" gorm:"type:varchar(100)"`
-	Email    string `json:"email" validate:"required,email" gorm:"type:varchar(100);unique"`
-	Password string `json:"password" validate:"required,gte=8" gorm:"type:varchar(255)"`
+	ID       uint    `json:"id" gorm:"primary_key"`
+	Name     string  `json:"name" validate:"required,gte=3,lte=50" gorm:"type:varchar(50)"`
+	Surname  string  `json:"surname" validate:"required,gte=3,lte=100" gorm:"type:varchar(100)"`
+	Email    string  `json:"email" validate:"required,email" gorm:"type:varchar(100);unique"`
+	Password *string `json:"password,omitempty" validate:"required,gte=8" gorm:"type:varchar(255)"`
 }
 
 func (user *User) Validate() error {
