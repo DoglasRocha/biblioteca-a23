@@ -51,7 +51,7 @@
 			request = await api.post('/cadastro', userData);
 			// workaround for html "required"
 
-			if (request.status == 200) document.location.href = '/login';
+			if (request.status == 201) document.location.href = '/login';
 		} catch (error) {
 			console.log(error);
 			errorFromServer = error.response.data;

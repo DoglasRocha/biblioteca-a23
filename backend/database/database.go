@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -16,10 +15,6 @@ var (
 )
 
 func ConnectToDatabase() {
-	err := godotenv.Load("database/.env")
-	if err != nil {
-		panic("Error loading .env file")
-	}
 
 	dsn := fmt.Sprintf(
 		"%s:%s@tcp(127.0.0.1:3306)/biblioteca?charset=utf8mb4&parseTime=True&loc=Local",
