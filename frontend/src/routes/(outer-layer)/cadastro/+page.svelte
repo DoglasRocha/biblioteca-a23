@@ -72,7 +72,7 @@
 					bind:value={userData.name}
 					type="text"
 					errorMsg="Seu nome deve possuir três ou mais letras"
-					validation={/.{3,50}/}
+					validation={/[\w ]{3,50}/}
 					bind:isInvalid={isInvalid.name}
 					required
 				/>
@@ -85,7 +85,7 @@
 					bind:value={userData.surname}
 					type="text"
 					errorMsg="Seu sobrenome deve possuir três ou mais letras"
-					validation={/.{3,100}/}
+					validation={/[\w ]{3,100}/}
 					bind:isInvalid={isInvalid.surname}
 					required
 				/>
@@ -150,7 +150,7 @@
 			type="text"
 			placeholder="Rua dos Proletários, 1917"
 			errorMsg="Seu endereço deve possuir mais de 5 dígitos"
-			validation={/.{5,}/}
+			validation={/[\w ]{5,}/}
 			bind:isInvalid={isInvalid.address}
 			required
 		/>
