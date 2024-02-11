@@ -17,10 +17,22 @@ func SetupRoutes() {
 	router.HandleFunc("/api/cadastro", controllers.CreateReader).Methods("POST")
 	router.HandleFunc("/api/login", controllers.Login).Methods("POST")
 
-	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Access-Control-Allow-Origin", "Accept", "Accept-Language", "Content-Language", "Origin"})
+	headersOk := handlers.AllowedHeaders([]string{
+		"X-Requested-With",
+		"Content-Type",
+		"Access-Control-Allow-Origin",
+		"Accept",
+		"Accept-Language",
+		"Content-Language",
+		"Origin",
+	})
+
 	originsOk := handlers.AllowedOrigins([]string{"http://localhost:5173"})
-	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
+	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "PATCH", "OPTIONS"})
 	credentialsOk := handlers.AllowCredentials()
 
-	log.Fatal(http.ListenAndServe(":8080", handlers.CORS(headersOk, originsOk, methodsOk, credentialsOk)(router)))
+	log.Fatal(http.ListenAndServe(
+		":8080",
+		handlers.CORS(headersOk, originsOk, methodsOk, credentialsOk)(router),
+	))
 }
