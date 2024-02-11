@@ -156,7 +156,7 @@
 
 		{#if errorFromServer}
 			<div class="mt-3 text-danger">
-				<p>Ocorreu algum erro. Tente novamnente mais tarde.</p>
+				<p>Ocorreu algum erro. Provavelmente já existe um usuário com este email.</p>
 			</div>
 		{/if}
 
