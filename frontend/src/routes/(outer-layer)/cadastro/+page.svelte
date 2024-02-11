@@ -53,7 +53,6 @@
 
 			if (request.status == 201) document.location.href = '/login';
 		} catch (error) {
-			console.log(error);
 			errorFromServer = error.response.data;
 		}
 		userData.birthday = userData.birthday.split('T')[0];

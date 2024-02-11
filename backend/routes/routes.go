@@ -8,8 +8,8 @@ import (
 	//"biblioteca-a23/models"
 	//"fmt"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
-	"github.com/rs/cors"
 )
 
 func SetupRoutes() {
@@ -17,6 +17,10 @@ func SetupRoutes() {
 	router.HandleFunc("/api/cadastro", controllers.CreateReader).Methods("POST")
 	router.HandleFunc("/api/login", controllers.Login).Methods("POST")
 
-	handler := cors.Default().Handler(router)
-	log.Fatal(http.ListenAndServe(":8080", handler))
+	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Access-Control-Allow-Origin", "Accept", "Accept-Language", "Content-Language", "Origin"})
+	originsOk := handlers.AllowedOrigins([]string{"http://localhost:5173"})
+	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
+	credentialsOk := handlers.AllowCredentials()
+
+	log.Fatal(http.ListenAndServe(":8080", handlers.CORS(headersOk, originsOk, methodsOk, credentialsOk)(router)))
 }

@@ -85,9 +85,10 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	cookie.Name = "accessToken"
 	cookie.Value = token
 	cookie.Expires = time.Now().Add(24 * time.Hour)
-	cookie.Secure = false
-	cookie.HttpOnly = true
+	cookie.Secure = true
+	cookie.HttpOnly = false
 	cookie.Path = "/"
+	cookie.SameSite = http.SameSiteNoneMode
 
 	http.SetCookie(w, &cookie)
 	w.WriteHeader(http.StatusOK)

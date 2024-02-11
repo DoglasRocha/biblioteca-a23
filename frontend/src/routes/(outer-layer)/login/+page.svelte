@@ -1,10 +1,26 @@
 <script>
 	import FormField from '$lib/components/form-field.svelte';
 	import Card from '$lib/components/card.svelte';
+	import BlankForm from '$lib/components/blank-form.svelte';
+	import { api } from '$lib/utils/api';
 	//import Logo from '/logo.png';
 
-	let email = '',
-		password = '';
+	let loginFields = {
+		email: '',
+		password: ''
+	};
+
+	let errorFromServer;
+	const handleSubmit = async () => {
+		let request;
+		try {
+			request = await api.post('/login', loginFields);
+
+			if (request.status == 200) document.location.href = '/';
+		} catch (error) {
+			errorFromServer = error.response.data;
+		}
+	};
 </script>
 
 <Card>
@@ -18,31 +34,40 @@
 		<h3>Login</h3>
 	</div>
 
-	<form>
+	<BlankForm>
 		<FormField
 			label="Endereço de Email"
 			name="email"
 			type="email"
-			bind:value={email}
+			bind:value={loginFields.email}
 			placeholder="exemplo@email.com"
 			required
 		/>
 
-		<FormField label="Senha" name="senha" type="password" bind:value={password} required />
+		<FormField
+			label="Senha"
+			name="senha"
+			type="password"
+			bind:value={loginFields.password}
+			required
+		/>
+		{#if errorFromServer}
+			<div class="mt-3 text-danger">
+				<p>Ocorreu algum erro. Provavelmente isso ajude:</p>
+				<p>{errorFromServer}</p>
+			</div>
+		{/if}
 		<div class="buttons mt-3">
 			<a class="btn btn-secondary" href="/cadastro"> Cadastrar </a>
 			<button
 				class="btn btn-primary"
 				type="submit"
 				on:click={() => {
-					if (email && password) {
-						document.cookie = 'logged=true';
-						document.location.href = '/';
-					}
+					handleSubmit();
 				}}>Login</button
 			>
 		</div>
-	</form>
+	</BlankForm>
 </Card>
 
 <style>
