@@ -50,12 +50,13 @@
 		try {
 			request = await api.post('/cadastro', userData);
 			// workaround for html "required"
-			userData.birthday = userData.birthday.split('T')[0];
 
 			if (request.status == 200) document.location.href = '/login';
 		} catch (error) {
-			errorFromServer = true;
+			console.log(error);
+			errorFromServer = error.response.data;
 		}
+		userData.birthday = userData.birthday.split('T')[0];
 	};
 </script>
 
@@ -156,7 +157,8 @@
 
 		{#if errorFromServer}
 			<div class="mt-3 text-danger">
-				<p>Ocorreu algum erro. Provavelmente já existe um usuário com este email.</p>
+				<p>Ocorreu algum erro. Provavelmente isso ajude:</p>
+				<p>{errorFromServer}</p>
 			</div>
 		{/if}
 

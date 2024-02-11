@@ -4,6 +4,7 @@ import (
 	"biblioteca-a23/database"
 	"biblioteca-a23/models"
 	"encoding/json"
+	"fmt"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -42,6 +43,7 @@ func create_reader(request_body []byte) (models.Reader, error) {
 
 	user, err := create_user(request_body)
 	if err != nil {
+		fmt.Println(err)
 		return reader, err
 	}
 
