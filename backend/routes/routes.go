@@ -18,6 +18,8 @@ func SetupRoutes() {
 	router.HandleFunc("/api/admin/cadastro", controllers.RegisterAdmin).Methods("POST")
 	router.HandleFunc("/api/login", controllers.Login).Methods("POST")
 	router.HandleFunc("/api/admin/login", controllers.Login).Methods("POST")
+	router.HandleFunc("/api/check", controllers.CheckReader).Methods("POST")
+	router.HandleFunc("/api/admin/check", controllers.CheckAdmin).Methods("POST")
 
 	headersOk := handlers.AllowedHeaders([]string{
 		"X-Requested-With",
