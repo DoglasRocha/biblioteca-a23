@@ -3,6 +3,7 @@
 	import Card from '../../../lib/components/card.svelte';
 
 	let userData = {
+		name: '',
 		surname: '',
 		email: '',
 		password: '',
@@ -17,10 +18,21 @@
 		<div class="d-flex">
 			<div class="me-1">
 				<FormField
-					name="surname"
+					name="Name"
 					label="Nome"
 					placeholder="João"
-					bind:value={userData.firstName}
+					bind:value={userData.name}
+					type="text"
+					required
+				/>
+		</div>
+		<div class="d-flex">
+			<div class="me-1">
+				<FormField
+					name="surname"
+					label="Surname"
+					placeholder="Silva"
+					bind:value={userData.surname}
 					type="text"
 					required
 				/>
