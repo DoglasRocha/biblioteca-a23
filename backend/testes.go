@@ -18,7 +18,7 @@ func testes() {
 	}
 
 	//fmt.Println(user)
-	fmt.Println(user.Validate(validate))
+	fmt.Println(user.Validate())
 
 	// teste hash
 	var teste string = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"

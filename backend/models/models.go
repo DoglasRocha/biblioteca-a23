@@ -7,32 +7,34 @@ import (
 	"gorm.io/gorm"
 )
 
+var Validator *validator.Validate = validator.New(validator.WithRequiredStructEnabled())
+
 type User struct {
 	gorm.Model
-	ID       uint   `json:"id" gorm:"primary_key"`
-	Name     string `json:"name" validate:"required,gte=3,lte=50" gorm:"type:varchar(50)"`
-	Surname  string `json:"surname" validate:"required,gte=3,lte=100" gorm:"type:varchar(100)"`
-	Email    string `json:"email" validate:"required,email" gorm:"type:varchar(100);unique"`
-	Password string `json:"password" validate:"required,lte=8" gorm:"type:varchar(255)"`
+	ID       uint    `json:"id" gorm:"primary_key"`
+	Name     string  `json:"name" validate:"required,gte=3,lte=50" gorm:"type:varchar(50)"`
+	Surname  string  `json:"surname" validate:"required,gte=3,lte=100" gorm:"type:varchar(100)"`
+	Email    string  `json:"email" validate:"required,email" gorm:"type:varchar(100);unique"`
+	Password *string `json:"password,omitempty" validate:"required,gte=8" gorm:"type:varchar(255)"`
 }
 
-func (user *User) Validate(validator *validator.Validate) error {
-	return validator.Struct(user)
+func (user *User) Validate() error {
+	return Validator.Struct(user)
 }
 
 type Reader struct {
 	gorm.Model
-	ID          uint `json:"id" gorm:"primary_key"`
-	UserID      uint `json:"user_id" validate:"required"`
+	ID          uint/*`json:"id" */ `gorm:"primary_key"`
+	UserID      uint/*`json:"user_id" */ `validate:"required"`
 	User        User
-	Birthday    time.Time `json:"birthday" validate:"required,datetime" gorm:"type:date"`
+	Birthday    time.Time `json:"birthday" validate:"required" gorm:"type:date"`
 	Address     string    `json:"address" validate:"required" gorm:"type:text"`
 	PhoneNumber string    `json:"phone_number" validate:"required" gorm:"type:varchar(20)"`
 	Loans       []Loan
 }
 
-func (reader *Reader) Validate(validator *validator.Validate) error {
-	return validator.Struct(reader)
+func (reader *Reader) Validate() error {
+	return Validator.Struct(reader)
 }
 
 type Admin struct {
@@ -43,8 +45,8 @@ type Admin struct {
 	IsCleared bool `json:"is_creared" validate:"required" gorm:"type:boolean"`
 }
 
-func (admin *Admin) Validate(validator *validator.Validate) error {
-	return validator.Struct(admin)
+func (admin *Admin) Validate() error {
+	return Validator.Struct(admin)
 }
 
 type Book struct {
@@ -58,8 +60,8 @@ type Book struct {
 	Copies      []Copy
 }
 
-func (book *Book) Validate(validator *validator.Validate) error {
-	return validator.Struct(book)
+func (book *Book) Validate() error {
+	return Validator.Struct(book)
 }
 
 type Copy struct {
@@ -82,6 +84,6 @@ type Loan struct {
 	IsAuthorized bool      `json:"is_authorized" gorm:"default:false"`
 }
 
-func (loan *Loan) Validate(validator *validator.Validate) error {
-	return validator.Struct(loan)
+func (loan *Loan) Validate() error {
+	return Validator.Struct(loan)
 }
