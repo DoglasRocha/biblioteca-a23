@@ -1,43 +1,15 @@
 package controllers
 
 import (
-	//"biblioteca-a23/database"
 	"biblioteca-a23/models"
-	"encoding/json"
 	"errors"
 	"fmt"
-	"time"
-
-	//"fmt"
 	"io"
 	"net/http"
 
-	"github.com/go-sql-driver/mysql"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
-
-func CreateReader(w http.ResponseWriter, r *http.Request) {
-	var reader models.Reader
-	body, err := io.ReadAll(r.Body)
-	if err != nil {
-		http.Error(w, "Erro ao ler requisição", http.StatusBadRequest)
-		return
-	}
-
-	reader, err = create_reader(body)
-	if err != nil {
-		if err.(*mysql.MySQLError).Number == 1062 {
-			http.Error(w, "Email já cadastrado", http.StatusNotAcceptable)
-			return
-		}
-		http.Error(w, "Erro ao criar usuário", http.StatusNotAcceptable)
-		return
-	}
-
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(reader)
-}
 
 func Login(w http.ResponseWriter, r *http.Request) {
 	var user models.User
@@ -81,14 +53,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// creates cookie
-	cookie := http.Cookie{}
-	cookie.Name = "accessToken"
-	cookie.Value = token
-	cookie.Expires = time.Now().Add(24 * time.Hour)
-	cookie.Secure = true
-	cookie.HttpOnly = false
-	cookie.Path = "/"
-	cookie.SameSite = http.SameSiteNoneMode
+	cookie := create_cookie("accessToken", token)
 
 	http.SetCookie(w, &cookie)
 	w.WriteHeader(http.StatusOK)

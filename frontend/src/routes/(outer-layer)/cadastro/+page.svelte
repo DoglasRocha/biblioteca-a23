@@ -3,6 +3,7 @@
 	import BlankForm from '$lib/components/blank-form.svelte';
 	import Card from '../../../lib/components/card.svelte';
 	import { api } from '$lib/utils/api.js';
+	import { isValidUserInput } from '$lib/utils/helpers.js';
 
 	let userData = {
 		name: '',
@@ -25,18 +26,10 @@
 		passwordConfirmation: false
 	};
 
-	let passwordConfirmation;
-	let errorFromServer;
-
-	const isValidUserInput = () => {
-		for (let key in isInvalid) {
-			if (isInvalid[key]) return false;
-		}
-		return true;
-	};
+	let passwordConfirmation, errorFromServer;
 
 	const handleSubmit = async () => {
-		if (!isValidUserInput()) return;
+		if (!isValidUserInput(isInvalid)) return;
 
 		if (userData.password != passwordConfirmation) {
 			isInvalid.passwordConfirmation = true;
@@ -46,15 +39,14 @@
 		// go date format
 		userData.birthday = `${userData.birthday}T00:00:00Z`;
 
-		let request;
 		try {
-			request = await api.post('/cadastro', userData);
-			// workaround for html "required"
+			let request = await api.post('/cadastro', userData);
 
 			if (request.status == 201) document.location.href = '/login';
 		} catch (error) {
 			errorFromServer = error.response.data;
 		}
+		// workaround for html "required"
 		userData.birthday = userData.birthday.split('T')[0];
 	};
 </script>
@@ -71,7 +63,7 @@
 					bind:value={userData.name}
 					type="text"
 					errorMsg="Seu nome deve possuir três ou mais letras"
-					validation={/[\w ]{3,50}/}
+					validation={/[\S ]{3,50}/}
 					bind:isInvalid={isInvalid.name}
 					required
 				/>
@@ -84,7 +76,7 @@
 					bind:value={userData.surname}
 					type="text"
 					errorMsg="Seu sobrenome deve possuir três ou mais letras"
-					validation={/[\w ]{3,100}/}
+					validation={/[S ]{3,100}/}
 					bind:isInvalid={isInvalid.surname}
 					required
 				/>
