@@ -12,20 +12,21 @@ func CheckReader(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	status, message, error := check_reader(cookie)
-	fmt.Println(status, message, error)
+	status, message, err := check_reader(cookie)
+
+	w.WriteHeader(status)
+	fmt.Fprintln(w, message)
 }
 
 func CheckAdmin(w http.ResponseWriter, r *http.Request) {
-
-	fmt.Println(r.Cookies())
-	fmt.Println(r.Header.Get("Authorization"))
 	cookie, err := r.Cookie("accessToken")
 	if err != nil {
 		http.Error(w, "Erro ao ler cookie", http.StatusUnauthorized)
 		return
 	}
 
-	status, message, error := check_reader(cookie)
-	fmt.Println(status, message, error)
+	status, message, err := check_admin(cookie)
+
+	w.WriteHeader(status)
+	fmt.Fprintln(w, message)
 }
