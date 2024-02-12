@@ -13,7 +13,9 @@ export async function load({ cookies }) {
             }
         })
     } catch (error) {
-        if (error.response.status == 403) 
+        if (error?.code == 'ECONNREFUSED')
+            redirect(303, "/error")
+        else if (error.response.status == 403) 
             redirect(303, "/")
         else if (error.response.status == 401)
             redirect(303, "/admin/login")
