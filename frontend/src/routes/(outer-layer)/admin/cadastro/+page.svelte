@@ -107,7 +107,7 @@
 				type="submit"
 				class="btn btn-primary"
 				on:click={() => {
-					document.location.href = '/admin/login';
+					handleSubmit();
 				}}>Cadastrar</button
 			>
 		</div>
