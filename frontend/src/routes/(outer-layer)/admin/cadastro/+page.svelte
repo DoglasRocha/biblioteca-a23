@@ -31,10 +31,11 @@
 		}
 
 		try {
-			let request = await api.passwordConfirmation('/admin/cadastro', userData);
+			let request = await api.post('/admin/cadastro', userData);
 
 			if (request.status == 201) document.location.href = '/admin/login';
 		} catch (error) {
+			console.log(error);
 			errorFromServer = error.response.data;
 		}
 	};
@@ -52,7 +53,7 @@
 					bind:value={userData.name}
 					type="text"
 					errorMsg="Seu nome deve possuir três ou mais letras"
-					validation={/[\w ]{3,50}/}
+					validation={/[\S ]{3,50}/}
 					bind:isInvalid={isInvalid.name}
 					required
 				/>
@@ -65,7 +66,7 @@
 					bind:value={userData.surname}
 					type="text"
 					errorMsg="Seu sobrenome deve possuir três ou mais letras"
-					validation={/[\w ]{3,100}/}
+					validation={/[\S ]{3,100}/}
 					bind:isInvalid={isInvalid.surname}
 					required
 				/>
@@ -102,6 +103,14 @@
 			bind:isInvalid={isInvalid.passwordConfirmation}
 			required
 		/>
+
+		{#if errorFromServer}
+			<div class="mt-3 text-danger">
+				<p>Ocorreu algum erro. Provavelmente isso ajude:</p>
+				<p>{errorFromServer}</p>
+			</div>
+		{/if}
+
 		<div class="mt-3 d-flex justify-content-end">
 			<button
 				type="submit"

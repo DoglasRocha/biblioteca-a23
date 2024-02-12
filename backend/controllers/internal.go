@@ -76,5 +76,3 @@ func create_admin(request_body []byte) (models.Admin, error) {
 	admin.User.Password = nil
 	return admin, nil
 }
-
-func login_admin(request_body []byte)

@@ -3,7 +3,6 @@
 	import Card from '$lib/components/card.svelte';
 	import BlankForm from '$lib/components/blank-form.svelte';
 	import { api } from '$lib/utils/api';
-	//import Logo from '/logo.png';
 
 	let loginFields = {
 		email: '',
@@ -12,9 +11,8 @@
 
 	let errorFromServer;
 	const handleSubmit = async () => {
-		let request;
 		try {
-			request = await api.post('/login', loginFields);
+			const request = await api.post('/login', loginFields);
 
 			if (request.status == 200) document.location.href = '/';
 		} catch (error) {
