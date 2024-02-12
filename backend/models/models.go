@@ -42,7 +42,7 @@ type Admin struct {
 	ID        uint `json:"id" gorm:"primary_key"`
 	UserID    uint `json:"user_id"`
 	User      User
-	IsCleared bool `json:"is_creared" validate:"required" gorm:"type:boolean"`
+	IsCleared bool `json:"is_cleared" gorm:"type:boolean"`
 }
 
 func (admin *Admin) Validate() error {

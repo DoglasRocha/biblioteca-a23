@@ -1,14 +1,11 @@
 package controllers
 
 import (
-	//"biblioteca-a23/database"
 	"biblioteca-a23/models"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"time"
 
-	//"fmt"
 	"io"
 	"net/http"
 
@@ -27,9 +24,11 @@ func CreateReader(w http.ResponseWriter, r *http.Request) {
 
 	reader, err = create_reader(body)
 	if err != nil {
-		if err.(*mysql.MySQLError).Number == 1062 {
-			http.Error(w, "Email já cadastrado", http.StatusNotAcceptable)
-			return
+		if mysqlErr, ok := err.(*mysql.MySQLError); ok {
+			if mysqlErr.Number == 1062 {
+				http.Error(w, "Email já cadastrado", http.StatusNotAcceptable)
+				return
+			}
 		}
 		http.Error(w, "Erro ao criar usuário", http.StatusNotAcceptable)
 		return
@@ -81,16 +80,34 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// creates cookie
-	cookie := http.Cookie{}
-	cookie.Name = "accessToken"
-	cookie.Value = token
-	cookie.Expires = time.Now().Add(24 * time.Hour)
-	cookie.Secure = true
-	cookie.HttpOnly = false
-	cookie.Path = "/"
-	cookie.SameSite = http.SameSiteNoneMode
+	cookie := create_cookie("accessToken", token)
 
 	http.SetCookie(w, &cookie)
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintln(w, "Logged-in")
+}
+
+func CreateAdmin(w http.ResponseWriter, r *http.Request) {
+	var admin models.Admin
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Erro ao ler requisição", http.StatusBadRequest)
+		return
+	}
+
+	admin, err = create_admin(body)
+	if err != nil {
+		if mysqlErr, ok := err.(*mysql.MySQLError); ok {
+			if mysqlErr.Number == 1062 {
+				http.Error(w, "Email já cadastrado", http.StatusNotAcceptable)
+				return
+			}
+		}
+		fmt.Println(err)
+		http.Error(w, "Erro ao criar admin", http.StatusNotAcceptable)
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(admin)
 }
