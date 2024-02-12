@@ -14,9 +14,10 @@ import (
 
 func SetupRoutes() {
 	router := mux.NewRouter()
-	router.HandleFunc("/api/cadastro", controllers.CreateReader).Methods("POST")
+	router.HandleFunc("/api/cadastro", controllers.RegisterReader).Methods("POST")
+	router.HandleFunc("/api/admin/cadastro", controllers.RegisterAdmin).Methods("POST")
 	router.HandleFunc("/api/login", controllers.Login).Methods("POST")
-	router.HandleFunc("/api/admin/cadastro", controllers.CreateAdmin).Methods("POST")
+	router.HandleFunc("/api/admin/login", controllers.Login).Methods("POST")
 
 	headersOk := handlers.AllowedHeaders([]string{
 		"X-Requested-With",
