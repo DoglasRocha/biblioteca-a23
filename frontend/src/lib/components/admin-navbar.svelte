@@ -2,7 +2,7 @@
 	import BaseNavbar from './base-navbar.svelte';
 </script>
 
-<BaseNavbar brandLink="/admin">
+<BaseNavbar baseLink="/admin">
 	<li class="nav-item">
 		<a class="nav-link fw-bold" href="/admin">Home</a>
 	</li>
@@ -36,10 +36,11 @@
 				<a class="nav-link fw-bold dropdown-item" href="/admin/emprestimos/historico">Histórico</a>
 			</li>
 			<li>
-		<div class="d-flex align-items-center p-2">
-		<i class="fa-solid fa-circle-user me-1"></i>
-		<a class="nav-link fw-bold" href="/minhaconta">Minha Conta</a>
-	</li>
+				<div class="d-flex align-items-center p-2">
+					<i class="fa-solid fa-circle-user me-1"></i>
+					<a class="nav-link fw-bold" href="/minhaconta">Minha Conta</a>
+				</div>
+			</li>
 		</ul>
 	</li>
 </BaseNavbar>

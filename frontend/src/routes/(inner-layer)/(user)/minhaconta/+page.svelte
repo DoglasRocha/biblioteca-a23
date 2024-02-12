@@ -1,6 +1,6 @@
 <script>
 	import FormField from '$lib/components/form-field.svelte';
-	import Card from '../../../lib/components/card.svelte';
+	import Card from '$lib/components/card.svelte';
 
 	let userData = {
 		firstName: '',
@@ -16,7 +16,7 @@
 </script>
 
 <Card>
-	<h1>Cadastro</h1>
+	<h1>Minha Conta</h1>
 	<form>
 		<div class="d-flex">
 			<div class="me-1">
@@ -100,7 +100,7 @@
 				class="btn btn-primary"
 				on:click={() => {
 					document.location.href = '/login';
-				}}>Cadastrar</button
+				}}>Atualizar</button
 			>
 		</div>
 	</form>
