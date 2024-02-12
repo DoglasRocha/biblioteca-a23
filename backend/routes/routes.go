@@ -29,6 +29,7 @@ func SetupRoutes() {
 		"Accept-Language",
 		"Content-Language",
 		"Origin",
+		"Access-Control-Expose-Headers",
 	})
 
 	originsOk := handlers.AllowedOrigins([]string{"http://localhost:5173"})
