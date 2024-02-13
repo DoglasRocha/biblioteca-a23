@@ -30,9 +30,8 @@ func SetupRoutes() {
 		"Content-Language",
 		"Origin",
 	})
-
 	originsOk := handlers.AllowedOrigins([]string{"http://localhost:5173"})
-	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "PATCH", "OPTIONS"})
+	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"})
 	credentialsOk := handlers.AllowCredentials()
 
 	log.Fatal(http.ListenAndServe(
