@@ -10,4 +10,7 @@
 			href="mailto:doglasrocha@alunos.utfpr.edu.br">o suporte.</a
 		>
 	</p>
+	<div class="d-flex justify-content-end">
+		<a href="/" class="btn btn-primary">Voltar para home</a>
+	</div>
 </Card>
