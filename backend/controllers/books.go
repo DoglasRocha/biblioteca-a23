@@ -6,6 +6,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 func RegisterBook(w http.ResponseWriter, r *http.Request) {
@@ -71,4 +73,31 @@ func SearchBooksByName(w http.ResponseWriter, r *http.Request) {
 	database.DB.Where("name LIKE ?", book_name+"%").Limit(50).Find(&books)
 
 	json.NewEncoder(w).Encode(books)
+}
+
+func SearchBookById(w http.ResponseWriter, r *http.Request) {
+	var book models.Book
+
+	// check if user is authorized
+	cookie, err := r.Cookie("accessToken")
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		fmt.Fprintln(w, "Erro ao acessar cookie")
+		return
+	}
+
+	status, message, err := check_reader(cookie)
+	if status != http.StatusOK {
+		w.WriteHeader(status)
+		fmt.Fprintln(w, message)
+		return
+	}
+
+	// get parameters
+	id := mux.Vars(r)["id"]
+
+	database.DB.First(&book, id)
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(book)
 }
