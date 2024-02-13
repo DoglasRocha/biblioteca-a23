@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"fmt"
-	"io"
 	"net/http"
 )
 
@@ -26,11 +25,13 @@ func RegisterBook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	request_body, err := io.ReadAll(r.Body)
+	err = register_book(r)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprintln(w, "Erro ao ler requisição")
+		fmt.Fprintln(w, "Erro ao criar livro")
 		return
 	}
 
+	w.WriteHeader(http.StatusCreated)
+	fmt.Fprintln(w, "Livro cadastrado")
 }
