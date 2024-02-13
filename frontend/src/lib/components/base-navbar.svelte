@@ -28,6 +28,7 @@
 					<i class="fa-solid fa-circle-user me-2 my-account-icon"></i>
 					Minha Conta
 				</a>
+				<a href="/sair" class="nav-link text-danger text-decoration-underline text-end">Sair</a>
 			</div>
 		</div>
 	</div>
