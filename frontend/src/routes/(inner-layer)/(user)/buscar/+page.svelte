@@ -52,6 +52,9 @@
 											<p>{book.description}</p>
 										</li>
 									</ul>
+									<div class="d-flex justify-content-end">
+										<a href={`/emprestar/${book.id}`} class="btn btn-primary">Emprestar</a>
+									</div>
 								</details>
 							</td>
 						</tr>
@@ -63,7 +66,4 @@
 </Card>
 
 <style>
-	.w-90 {
-		width: 90%;
-	}
 </style>

@@ -44,9 +44,15 @@ func RegisterBook(w http.ResponseWriter, r *http.Request) {
 func SearchBookByName(w http.ResponseWriter, r *http.Request) {
 	var books []models.Book
 	// get parameters
-	book_name := r.URL.Query().Get("name")
+	query_params := r.URL.Query()
+	book_name := query_params.Get("name")
 
-	database.DB.Debug().Where("name LIKE ?", book_name+"%").Limit(50).Find(&books)
+	if book_name == "" && len(query_params) != 0 {
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode([]models.Book{})
+		return
+	}
+	database.DB.Where("name LIKE ?", book_name+"%").Limit(50).Find(&books)
 
 	json.NewEncoder(w).Encode(books)
 }
