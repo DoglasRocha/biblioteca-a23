@@ -11,12 +11,13 @@
 		Esta é a parte dos administradores. Aqui, vocês podem controlar toda a operação da biblioteca.
 	</p>
 	<p>
-		Para cadastrar um livro, clique em <Link href="/admin/cadastrar">Cadastrar livro</Link> na barra
-		de navegação.
+		Para cadastrar um livro, clique em Livros > <Link href="/admin/livros/cadastrar">Cadastrar</Link
+		>
+		na barra de navegação.
 	</p>
 	<p>
-		Para buscar livros cadastrados, editá-los ou apagá-los, clique em <Link href="/admin/buscar"
-			>Buscar livro</Link
+		Para buscar livros cadastrados, editá-los ou apagá-los, clique em Livros > <Link
+			href="/admin/livros/buscar">Buscar</Link
 		> na barra de navegação.
 	</p>
 	<p>

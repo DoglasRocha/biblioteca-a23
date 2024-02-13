@@ -76,7 +76,7 @@
 					bind:value={userData.surname}
 					type="text"
 					errorMsg="Seu sobrenome deve possuir três ou mais letras"
-					validation={/[S ]{3,100}/}
+					validation={/[\S ]{3,100}/}
 					bind:isInvalid={isInvalid.surname}
 					required
 				/>

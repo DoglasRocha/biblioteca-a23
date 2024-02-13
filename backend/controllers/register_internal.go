@@ -6,21 +6,21 @@ import (
 	"encoding/json"
 )
 
-func create_reader(request_body []byte) (models.Reader, error) {
+func create_reader(request_body []byte) error {
 	var reader models.Reader
 	var user models.User
 
 	// creates the user
 	user, err := create_user(request_body)
 	if err != nil {
-		return models.Reader{}, err
+		return err
 	}
 
 	// unpacks the json body to the reader struct
 	err = json.Unmarshal(request_body, &reader)
 	if err != nil {
 		database.DB.Delete(&user)
-		return models.Reader{}, err
+		return err
 	}
 
 	reader.User = user
@@ -30,29 +30,27 @@ func create_reader(request_body []byte) (models.Reader, error) {
 	err = reader.Validate()
 	if err != nil {
 		database.DB.Delete(&user)
-		return models.Reader{}, err
+		return err
 	}
 
 	// creates the reader in DB
 	err = database.DB.Create(&reader).Error
 	if err != nil {
 		database.DB.Delete(&user)
-		return models.Reader{}, err
+		return err
 	}
 
-	// hides password from response
-	reader.User.Password = nil
-	return reader, nil
+	return nil
 }
 
-func create_admin(request_body []byte) (models.Admin, error) {
+func create_admin(request_body []byte) error {
 	var admin models.Admin
 	var user models.User
 
 	// creates the user
 	user, err := create_user(request_body)
 	if err != nil {
-		return admin, err
+		return err
 	}
 
 	admin.User = user
@@ -62,17 +60,15 @@ func create_admin(request_body []byte) (models.Admin, error) {
 	// validates the admin struct
 	err = admin.Validate()
 	if err != nil {
-		return models.Admin{}, err
+		return err
 	}
 
 	// creates the admin in DB
 	err = database.DB.Create(&admin).Error
 	if err != nil {
 		database.DB.Delete(&user)
-		return models.Admin{}, err
+		return err
 	}
 
-	// hides password from response
-	admin.User.Password = nil
-	return admin, nil
+	return nil
 }
