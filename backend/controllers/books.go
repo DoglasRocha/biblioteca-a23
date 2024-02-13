@@ -41,7 +41,7 @@ func RegisterBook(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "Livro cadastrado")
 }
 
-func SearchBookByName(w http.ResponseWriter, r *http.Request) {
+func SearchBooksByName(w http.ResponseWriter, r *http.Request) {
 	var books []models.Book
 	// get parameters
 	query_params := r.URL.Query()
