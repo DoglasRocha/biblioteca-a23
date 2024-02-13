@@ -1,6 +1,9 @@
 package controllers
 
 import (
+	"biblioteca-a23/database"
+	"biblioteca-a23/models"
+	"encoding/json"
 	"fmt"
 	"net/http"
 )
@@ -36,4 +39,14 @@ func RegisterBook(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusCreated)
 	fmt.Fprintln(w, "Livro cadastrado")
+}
+
+func SearchBookByName(w http.ResponseWriter, r *http.Request) {
+	var books []models.Book
+	// get parameters
+	book_name := r.URL.Query().Get("name")
+
+	database.DB.Debug().Where("name LIKE ?", book_name+"%").Limit(50).Find(&books)
+
+	json.NewEncoder(w).Encode(books)
 }
