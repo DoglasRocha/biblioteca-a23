@@ -52,7 +52,7 @@ func (admin *Admin) Validate() error {
 type Book struct {
 	gorm.Model
 	ID          uint    `json:"id" gorm:"primary_key"`
-	Name        string  `json:"name" validate:"required,lte=3" gorm:"type:varchar(100)"`
+	Name        string  `json:"name" validate:"required,gte=3" gorm:"type:varchar(100)"`
 	ISBN        *string `json:"isbn" gorm:"type:varchar(20)"`
 	Description string  `json:"description" gorm:"type:text"`
 	Gender      string  `json:"gender" gorm:"type:varchar(30)"`

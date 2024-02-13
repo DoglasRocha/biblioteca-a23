@@ -3,6 +3,7 @@
 	import FormField from '$lib/components/form-field.svelte';
 	import BlankForm from '$lib/components/blank-form.svelte';
 	import axios from 'axios';
+	import { api } from '$lib/utils/api.js';
 
 	let book = {
 		name: '',
@@ -10,6 +11,8 @@
 		description: '',
 		gender: ''
 	};
+
+	let errorFromServer;
 
 	const handleISBNSubmit = async () => {
 		// 8575421131 - codigo para teste
@@ -23,6 +26,19 @@
 			book.name = bookData.data.items[0].volumeInfo.title ?? '';
 			book.description = bookData.data.items[0].volumeInfo.description ?? '';
 			book = book;
+		}
+	};
+
+	const handleSubmit = async () => {
+		try {
+			let request = await api.post('/admin/livros/cadastrar', book);
+
+			if (request.status == 201) {
+				document.location.href = '/admin/livros/buscar';
+				return;
+			}
+		} catch (error) {
+			errorFromServer = error.response.data;
 		}
 	};
 </script>
@@ -59,10 +75,16 @@
 				</div>
 			</div>
 			<div class="col">
-				<FormField name="book-gender" label="Gênero do livro" bind:value={book.gender} required />
+				<FormField name="book-gender" label="Gênero do livro" bind:value={book.gender} />
 			</div>
+			{#if errorFromServer}
+				<div class="mt-3 text-danger">
+					<p>Ocorreu um erro. Talvez isso ajude:</p>
+					<p>{errorFromServer}</p>
+				</div>
+			{/if}
 			<div class="d-flex justify-content-end mt-3">
-				<button type="submit" class="btn btn-primary">Cadastrar</button>
+				<button type="submit" class="btn btn-primary" on:click={handleSubmit}>Cadastrar</button>
 			</div>
 		</div>
 	</BlankForm>

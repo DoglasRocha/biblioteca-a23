@@ -20,7 +20,7 @@ func SetupRoutes() {
 	router.HandleFunc("/api/admin/login", controllers.Login).Methods("POST")
 	router.HandleFunc("/api/check", controllers.CheckReader).Methods("POST")
 	router.HandleFunc("/api/admin/check", controllers.CheckAdmin).Methods("POST")
-	router.HandleFunc("api/admin/cadastrar", controllers.RegisterBook).Methods("POST")
+	router.HandleFunc("/api/admin/livros/cadastrar", controllers.RegisterBook).Methods("POST")
 
 	headersOk := handlers.AllowedHeaders([]string{
 		"X-Requested-With",

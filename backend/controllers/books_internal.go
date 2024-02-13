@@ -9,6 +9,7 @@ import (
 
 func register_book(request *http.Request) error {
 	var book models.Book
+	var copy models.Copy
 
 	err := json.NewDecoder(request.Body).Decode(&book)
 	if err != nil {
@@ -21,6 +22,12 @@ func register_book(request *http.Request) error {
 	}
 
 	err = database.DB.Create(&book).Error
+	if err != nil {
+		return err
+	}
+
+	copy.BookID = book.ID
+	err = database.DB.Create(&copy).Error
 	if err != nil {
 		return err
 	}

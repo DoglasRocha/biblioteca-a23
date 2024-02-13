@@ -16,17 +16,19 @@ func RegisterBook(w http.ResponseWriter, r *http.Request) {
 	status, _, err := check_admin(cookie)
 	if err != nil {
 		w.WriteHeader(status)
-		fmt.Println(w, "Erro ao validar usuário")
+		fmt.Fprintln(w, "Erro ao validar usuário")
+		return
 	}
 
 	if status != http.StatusOK {
 		w.WriteHeader(http.StatusForbidden)
-		fmt.Println(w, "Você não possui acesso a esta parte do sistema")
+		fmt.Fprintln(w, "Você não possui acesso a esta parte do sistema")
 		return
 	}
 
 	err = register_book(r)
 	if err != nil {
+		fmt.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintln(w, "Erro ao criar livro")
 		return
