@@ -1,65 +1,62 @@
 <script>
 	import Card from '$lib/components/card.svelte';
 	import SearchBar from '$lib/components/search-bar.svelte';
+	import { api } from '$lib/utils/api.js';
+	export let data;
+
+	let books = data.books,
+		error = data.error;
+	let searchBarValue;
+
+	const searchBarOnClick = async () => {
+		try {
+			data = await api.get(`/livros/buscar?name=${searchBarValue}`);
+			books = data.data;
+			error = false;
+		} catch (err) {
+			error = true;
+		}
+	};
 </script>
 
 <Card class="w-75">
 	<h1 class="text-center">Buscar livro</h1>
 	<div class="d-flex justify-content-center mt-5">
-		<SearchBar placeholder="Pesquisar livro" />
+		<SearchBar
+			placeholder="Pesquisar livro"
+			bind:value={searchBarValue}
+			onClick={searchBarOnClick}
+		/>
 	</div>
-	<div class="w-90"></div>
 	<div class="d-flex justify-content-center mt-5 px-5">
 		<table class="table table-striped">
 			<thead>
 				<th>Nome</th>
 			</thead>
 			<tbody>
-				<tr>
-					<td>
-						<details>
-							<summary> João e o Pé de Feijão </summary>
-							<ul>
-								<li><span class="fw-bold"> Gênero: </span>aaaa</li>
-								<li><span class="fw-bold">Exemplares disponíveis: </span>10</li>
-								<li>
-									<span class="fw-bold">Descrição: </span>
-									<p>
-										Lorem ipsum dolor sit, amet consectetur adipisicing elit. Laborum repellat
-										recusandae praesentium quae magni quaerat necessitatibus commodi expedita
-										maiores. Mollitia blanditiis numquam reprehenderit ex iste inventore, nobis
-										repudiandae hic dolorum.
-									</p>
-								</li>
-							</ul>
-							<div class="d-flex justify-content-end">
-								<a href="/emprestar/1" class="btn btn-dark">Emprestar</a>
-							</div>
-						</details>
-					</td>
-				</tr>
-				<tr
-					><td
-						><details>
-							<summary> Manifesto Comunista </summary>
-							<ul>
-								<li><span class="fw-bold">Gênero: </span>bbbb</li>
-								<li><span class="fw-bold">Exemplares disponíveis: </span>5</li>
-								<li>
-									<span class="fw-bold">Descrição: </span>
-									<p>
-										Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam doloribus aut
-										nesciunt, cum quia officia recusandae doloremque animi est numquam dicta esse
-										blanditiis voluptatum rem accusamus totam ipsa dolorem labore!
-									</p>
-								</li>
-							</ul>
-							<div class="d-flex justify-content-end">
-								<a href="/emprestar/2" class="btn btn-dark">Emprestar</a>
-							</div>
-						</details>
-					</td></tr
-				>
+				{#if error}
+					<tr>
+						<td> Não há livros!! </td>
+					</tr>
+				{:else}
+					{#each books as book}
+						<tr>
+							<td>
+								<details>
+									<summary>{book.name}</summary>
+									<ul>
+										<li><span class="fw-bold">Gênero: </span>{book.gender}</li>
+										<li><span class="fw-bold">Exemplares disponíveis: </span>{book.copies}</li>
+										<li>
+											<span class="fw-bold">Descrição: </span>
+											<p>{book.description}</p>
+										</li>
+									</ul>
+								</details>
+							</td>
+						</tr>
+					{/each}
+				{/if}
 			</tbody>
 		</table>
 	</div>
