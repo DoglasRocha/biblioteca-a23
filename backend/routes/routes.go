@@ -22,6 +22,7 @@ func SetupRoutes() {
 	router.HandleFunc("/api/admin/check", controllers.CheckAdmin).Methods("POST")
 	router.HandleFunc("/api/admin/livros/cadastrar", controllers.RegisterBook).Methods("POST")
 	router.HandleFunc("/api/livros/buscar", controllers.SearchBooksByName).Methods("GET")
+	router.HandleFunc("/api/livros/buscar/{id}", controllers.SearchBookById).Methods("GET")
 
 	headersOk := handlers.AllowedHeaders([]string{
 		"X-Requested-With",
