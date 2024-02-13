@@ -6,11 +6,19 @@
 	<li class="nav-item">
 		<a class="nav-link fw-bold" href="/admin">Home</a>
 	</li>
-	<li class="nav-item">
-		<a class="nav-link fw-bold" href="/admin/buscar">Buscar livro</a>
-	</li>
-	<li class="nav-item">
-		<a class="nav-link fw-bold" href="/admin/cadastrar">Cadastrar livro</a>
+	<li class="nav-item dropdown">
+		<button class="nav-link dropdown-toggle fw-bold" data-bs-toggle="dropdown">Livros</button>
+		<ul class="dropdown-menu">
+			<li class="px-1">
+				<a class="nav-link fw-bold dropdown-item" href="/admin/livros/buscar">Buscar</a>
+			</li>
+			<li>
+				<hr class="dropdown-divider" />
+			</li>
+			<li class="px-1">
+				<a class="nav-link fw-bold dropdown-item" href="/admin/livros/cadastrar"> Cadastrar </a>
+			</li>
+		</ul>
 	</li>
 	<li class="nav-item">
 		<a class="nav-link fw-bold" href="/admin/admins">Administradores</a>
