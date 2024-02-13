@@ -43,6 +43,22 @@ func RegisterBook(w http.ResponseWriter, r *http.Request) {
 
 func SearchBooksByName(w http.ResponseWriter, r *http.Request) {
 	var books []models.Book
+
+	// check if user is authorized
+	cookie, err := r.Cookie("accessToken")
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		fmt.Fprintln(w, "Erro ao acessar cookie")
+		return
+	}
+
+	status, message, err := check_reader(cookie)
+	if status != http.StatusOK {
+		w.WriteHeader(status)
+		fmt.Fprintln(w, message)
+		return
+	}
+
 	// get parameters
 	query_params := r.URL.Query()
 	book_name := query_params.Get("name")
