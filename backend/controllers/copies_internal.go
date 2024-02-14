@@ -7,11 +7,7 @@ import (
 
 func create_copies(amount int, book_id int) error {
 	for i := 0; i < amount; i++ {
-		var copy models.Copy
-		copy.BookID = uint(book_id)
-		copy.IsBorrowed = false
-
-		err := database.DB.Create(copy).Error
+		err := database.DB.Create(&models.Copy{BookID: uint(book_id), IsBorrowed: false}).Error
 		if err != nil {
 			return err
 		}

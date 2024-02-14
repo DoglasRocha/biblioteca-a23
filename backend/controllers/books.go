@@ -120,6 +120,7 @@ func UpdateBook(w http.ResponseWriter, r *http.Request) {
 	}
 	book_id := int(not_updated_book.ID)
 
+	// logic to create or delete copies
 	copies_diff := int(book_fields_to_update.CopiesCount) - int(not_updated_book.CopiesCount)
 	if copies_diff > 0 {
 		err = create_copies(copies_diff, book_id)
@@ -137,7 +138,15 @@ func UpdateBook(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	// makes sure the id update is the id from the url
 	book_fields_to_update.ID = not_updated_book.ID
+
+	// updates the count of copies
+	var copies_count int64
+	database.DB.Model(&models.Copy{}).Where("book_id = ?", book_id).Count(&copies_count)
+	book_fields_to_update.CopiesCount = uint(copies_count)
+
+	// updates the book
 	err = database.DB.Save(&book_fields_to_update).Error
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
