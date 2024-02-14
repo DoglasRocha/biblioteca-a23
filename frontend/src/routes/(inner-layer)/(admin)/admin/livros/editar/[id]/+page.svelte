@@ -30,10 +30,8 @@
 			book.copies = parseInt(book.copies);
 			let request = await api.put(`/admin/livros/editar/${book.id}`, book);
 
-			console.log(request);
 			if (request.status == 200) {
 				document.location.href = document.location.href + '/';
-				return;
 			}
 		} catch (error) {
 			errorFromServer = error.response.data;
