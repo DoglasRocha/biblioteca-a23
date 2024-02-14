@@ -2,6 +2,7 @@
 	import Card from '$lib/components/card.svelte';
 	import SearchBar from '$lib/components/search-bar.svelte';
 	import { api } from '$lib/utils/api.js';
+	import BookInTable from '$lib/components/book-in-table.svelte';
 	export let data;
 
 	let books = data.books,
@@ -42,20 +43,9 @@
 					{#each books as book}
 						<tr>
 							<td>
-								<details>
-									<summary>{book.name}</summary>
-									<ul>
-										<li><span class="fw-bold">Gênero: </span>{book.gender}</li>
-										<li><span class="fw-bold">Exemplares disponíveis: </span>{book.copies}</li>
-										<li>
-											<span class="fw-bold">Descrição: </span>
-											<p>{book.description}</p>
-										</li>
-									</ul>
-									<div class="d-flex justify-content-end">
-										<a href={`/emprestar/${book.id}`} class="btn btn-primary">Emprestar</a>
-									</div>
-								</details>
+								<BookInTable {book}>
+									<a href={`/emprestar/${book.id}`} class="btn btn-primary">Emprestar</a>
+								</BookInTable>
 							</td>
 						</tr>
 					{/each}
