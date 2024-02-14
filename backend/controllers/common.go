@@ -97,36 +97,36 @@ func create_user(request_body []byte) (models.User, error) {
 	return user, nil
 }
 
-func is_reader_authenticated(w http.ResponseWriter, r *http.Request) error {
+func is_reader_authenticated(w http.ResponseWriter, r *http.Request) int {
 	cookie, err := r.Cookie("accessToken")
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Fprintln(w, "Erro ao acessar cookie")
-		return err
+		return http.StatusInternalServerError
 	}
 	status, message, err := check_reader(cookie)
 	if status != http.StatusOK {
 		w.WriteHeader(status)
 		fmt.Fprintln(w, message)
-		return err
+		return status
 	}
 
-	return nil
+	return status
 }
 
-func is_admin_autenticated(w http.ResponseWriter, r *http.Request) error {
+func is_admin_autenticated(w http.ResponseWriter, r *http.Request) int {
 	cookie, err := r.Cookie("accessToken")
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Fprintln(w, "Erro ao acessar cookie")
-		return err
+		return http.StatusInternalServerError
 	}
 	status, message, err := check_admin(cookie)
 	if status != http.StatusOK {
 		w.WriteHeader(status)
 		fmt.Fprintln(w, message)
-		return err
+		return status
 	}
 
-	return nil
+	return status
 }
