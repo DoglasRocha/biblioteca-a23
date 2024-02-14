@@ -1,5 +1,6 @@
 <script>
 	export let book = {};
+	export let admin = false;
 </script>
 
 <details>
