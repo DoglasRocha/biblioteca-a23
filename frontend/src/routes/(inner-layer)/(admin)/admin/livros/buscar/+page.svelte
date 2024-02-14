@@ -2,6 +2,7 @@
 	import Card from '$lib/components/card.svelte';
 	import SearchBar from '$lib/components/search-bar.svelte';
 	import { api } from '$lib/utils/api.js';
+	import BookInTable from '../../../../../../lib/components/book-in-table.svelte';
 	export let data;
 
 	let books = data.books,
@@ -10,15 +11,13 @@
 
 	const searchBarOnClick = async () => {
 		try {
-			data = await api.get(`/livros/buscar?name=${searchBarValue}`);
+			data = await api.get(`/admin/livros/buscar?name=${searchBarValue}`);
 			books = data.data;
+			console.log(books);
 			error = false;
 		} catch (err) {
 			error = true;
 		}
-	}
-	let book = {
-		name: 'Joao e o Pe de Feijao', description: "lorem",
 	};
 </script>
 
@@ -42,25 +41,28 @@
 						<td> Não há livros!! </td>
 					</tr>
 				{:else}
+					{#each books as book}
 						<tr>
 							<td>
-								<details>
-									<summary>{book.name}</summary>
-									<ul>
-										<li><span class="fw-bold">Gênero: </span>{book.gender}</li>
-										<li><span class="fw-bold">Exemplares disponíveis: </span>{book.copies}</li>
-										<li>
-											<span class="fw-bold">Descrição: </span>
-											<p>{book.description}</p>
-										</li>
-									</ul>
-									<div class="d-flex justify-content-end">
-										<a href={`admin/livros/editar/1'${book.id}`} class="btn btn-secondary">Editar</a>
-										<button type="button" class="btn btn-danger ms-1">Deletar</button>
-									</div>
-								</details>
+								<BookInTable {book} admin={true}>
+									<a href={`/admin/livros/editar/${book.id}`} class="btn btn-secondary"> Editar </a>
+									<button
+										type="button"
+										class="btn btn-danger ms-1"
+										on:click={async () => {
+											let confirmation = confirm(
+												'Você tem certeza que deseja deletar esse livro e todas as suas cópias?'
+											);
+											if (confirmation) {
+												//await api.delete(`/admin/livros/deletar/${book.id}`);
+												document.location.href = document.location.href + '/';
+											}
+										}}>Deletar</button
+									>
+								</BookInTable>
 							</td>
 						</tr>
+					{/each}
 				{/if}
 			</tbody>
 		</table>
@@ -69,4 +71,3 @@
 
 <style>
 </style>
-
