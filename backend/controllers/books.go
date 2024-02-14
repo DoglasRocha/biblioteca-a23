@@ -93,3 +93,58 @@ func SearchBookByIdAdmin(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(book)
 }
+
+func UpdateBook(w http.ResponseWriter, r *http.Request) {
+	var book_fields_to_update, not_updated_book models.Book
+
+	status := is_admin_autenticated(w, r)
+	if status != http.StatusOK {
+		return
+	}
+
+	// json from request
+	err := json.NewDecoder(r.Body).Decode(&book_fields_to_update)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintln(w, "Erro ao processar requisição")
+		return
+	}
+
+	// get parameters
+	id := mux.Vars(r)["id"]
+	err = database.DB.First(&not_updated_book, id).Error
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintln(w, "Não há livro com esse identificador")
+		return
+	}
+	book_id := int(not_updated_book.ID)
+
+	copies_diff := int(book_fields_to_update.CopiesCount) - int(not_updated_book.CopiesCount)
+	if copies_diff > 0 {
+		err = create_copies(copies_diff, book_id)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			fmt.Fprintln(w, "Erro ao criar cópias do livro")
+			return
+		}
+	} else if copies_diff < 0 {
+		err = delete_copies(-copies_diff, book_id)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			fmt.Fprintln(w, "Erro ao deletar cópias do livro")
+			return
+		}
+	}
+
+	book_fields_to_update.ID = not_updated_book.ID
+	err = database.DB.Save(&book_fields_to_update).Error
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintln(w, "Erro ao atualizar livro")
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintln(w, "Livro atualizado com sucesso")
+}
