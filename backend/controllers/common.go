@@ -4,6 +4,7 @@ import (
 	"biblioteca-a23/database"
 	"biblioteca-a23/models"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"os"
 	"time"
@@ -94,4 +95,38 @@ func create_user(request_body []byte) (models.User, error) {
 		return models.User{}, err
 	}
 	return user, nil
+}
+
+func is_reader_authenticated(w http.ResponseWriter, r *http.Request) error {
+	cookie, err := r.Cookie("accessToken")
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintln(w, "Erro ao acessar cookie")
+		return err
+	}
+	status, message, err := check_reader(cookie)
+	if status != http.StatusOK {
+		w.WriteHeader(status)
+		fmt.Fprintln(w, message)
+		return err
+	}
+
+	return nil
+}
+
+func is_admin_autenticated(w http.ResponseWriter, r *http.Request) error {
+	cookie, err := r.Cookie("accessToken")
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintln(w, "Erro ao acessar cookie")
+		return err
+	}
+	status, message, err := check_admin(cookie)
+	if status != http.StatusOK {
+		w.WriteHeader(status)
+		fmt.Fprintln(w, message)
+		return err
+	}
+
+	return nil
 }
