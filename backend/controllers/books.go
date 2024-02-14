@@ -12,20 +12,12 @@ import (
 
 func RegisterBook(w http.ResponseWriter, r *http.Request) {
 	// checks if user is admin
-	cookie, err := r.Cookie("accessToken")
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintln(w, "Erro ao acessar cookie")
-		return
-	}
-	status, message, err := check_admin(cookie)
+	status := is_admin_autenticated(w, r)
 	if status != http.StatusOK {
-		w.WriteHeader(status)
-		fmt.Fprintln(w, message)
 		return
 	}
 
-	err = register_book(r)
+	err := register_book(r)
 	if err != nil {
 		fmt.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -40,31 +32,14 @@ func RegisterBook(w http.ResponseWriter, r *http.Request) {
 func SearchBooksByName(w http.ResponseWriter, r *http.Request) {
 	var books []models.Book
 
-	// check if user is authorized
-	cookie, err := r.Cookie("accessToken")
-	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		fmt.Fprintln(w, "Erro ao acessar cookie")
-		return
-	}
-
-	status, message, err := check_reader(cookie)
+	status := is_reader_authenticated(w, r)
 	if status != http.StatusOK {
-		w.WriteHeader(status)
-		fmt.Fprintln(w, message)
 		return
 	}
 
 	// get parameters
 	query_params := r.URL.Query()
-	book_name := query_params.Get("name")
-
-	if book_name == "" && len(query_params) != 0 {
-		w.WriteHeader(http.StatusNotFound)
-		json.NewEncoder(w).Encode([]models.Book{})
-		return
-	}
-	database.DB.Where("name LIKE ?", book_name+"%").Limit(50).Find(&books)
+	status, books = search_book_by_name(query_params)
 
 	json.NewEncoder(w).Encode(books)
 }
@@ -72,18 +47,8 @@ func SearchBooksByName(w http.ResponseWriter, r *http.Request) {
 func SearchBookById(w http.ResponseWriter, r *http.Request) {
 	var book models.Book
 
-	// check if user is authorized
-	cookie, err := r.Cookie("accessToken")
-	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		fmt.Fprintln(w, "Erro ao acessar cookie")
-		return
-	}
-
-	status, message, err := check_reader(cookie)
+	status := is_reader_authenticated(w, r)
 	if status != http.StatusOK {
-		w.WriteHeader(status)
-		fmt.Fprintln(w, message)
 		return
 	}
 
@@ -99,31 +64,13 @@ func SearchBookById(w http.ResponseWriter, r *http.Request) {
 func SearchBooksByNameAdmin(w http.ResponseWriter, r *http.Request) {
 	var books []models.Book
 
-	// check if user is authorized
-	cookie, err := r.Cookie("accessToken")
-	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		fmt.Fprintln(w, "Erro ao acessar cookie")
-		return
-	}
-
-	status, message, err := check_admin(cookie)
+	status := is_admin_autenticated(w, r)
 	if status != http.StatusOK {
-		w.WriteHeader(status)
-		fmt.Fprintln(w, message)
 		return
 	}
 
 	// get parameters
 	query_params := r.URL.Query()
-	/*book_name := query_params.Get("name")
-
-	if book_name == "" && len(query_params) != 0 {
-		w.WriteHeader(http.StatusNotFound)
-		json.NewEncoder(w).Encode([]models.Book{})
-		return
-	}
-	database.DB.Where("name LIKE ?", book_name+"%").Limit(50).Find(&books)*/
 	status, books = search_book_by_name(query_params)
 
 	w.WriteHeader(status)
@@ -133,18 +80,8 @@ func SearchBooksByNameAdmin(w http.ResponseWriter, r *http.Request) {
 func SearchBookByIdAdmin(w http.ResponseWriter, r *http.Request) {
 	var book models.Book
 
-	// check if user is authorized
-	cookie, err := r.Cookie("accessToken")
-	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		fmt.Fprintln(w, "Erro ao acessar cookie")
-		return
-	}
-
-	status, message, err := check_admin(cookie)
+	status := is_admin_autenticated(w, r)
 	if status != http.StatusOK {
-		w.WriteHeader(status)
-		fmt.Fprintln(w, message)
 		return
 	}
 
