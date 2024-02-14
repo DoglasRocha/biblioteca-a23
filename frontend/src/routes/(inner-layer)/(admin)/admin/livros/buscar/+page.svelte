@@ -13,7 +13,6 @@
 		try {
 			data = await api.get(`/admin/livros/buscar?name=${searchBarValue}`);
 			books = data.data;
-			console.log(books);
 			error = false;
 		} catch (err) {
 			error = true;
