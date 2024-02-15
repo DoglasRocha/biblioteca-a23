@@ -48,3 +48,34 @@ func search_book_by_name(query_params url.Values) (int, []models.Book) {
 
 	return http.StatusOK, books
 }
+
+func search_available_books_by_name(query_params url.Values) (int, []models.Book) {
+	var books []models.Book
+	var available_copies_ids []uint
+
+	// available books
+	err := database.DB.Model(&models.Copy{}).
+		Distinct("book_id").
+		Select("book_id").
+		Where("is_borrowed = ?", false).
+		Scan(&available_copies_ids).Error
+	if err != nil {
+		return http.StatusNotFound, books
+	}
+
+	book_name := query_params.Get("name")
+
+	if book_name == "" && len(query_params) != 0 {
+		return http.StatusNotFound, books
+	}
+
+	err = database.DB.
+		Where("id IN ? AND name LIKE ?", available_copies_ids, book_name+"%").
+		Limit(50).
+		Find(&books).Error
+	if err != nil {
+		return http.StatusNotFound, books
+	}
+
+	return http.StatusOK, books
+}
