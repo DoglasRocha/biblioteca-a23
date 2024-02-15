@@ -2,7 +2,7 @@
 	import Card from '$lib/components/card.svelte';
 	import SearchBar from '$lib/components/search-bar.svelte';
 	import { api } from '$lib/utils/api.js';
-	import BookInTable from '../../../../../../lib/components/book-in-table.svelte';
+	import BookInTable from '$lib/components/book-in-table.svelte';
 	export let data;
 
 	let books = data.books,
@@ -11,7 +11,9 @@
 
 	const searchBarOnClick = async () => {
 		try {
-			data = await api.get(`/admin/livros/buscar?name=${searchBarValue}`);
+			if (searchBarValue.trim() == '') data = await api.get(`/admin/livros/buscar`);
+			else data = await api.get(`/admin/livros/buscar?name=${searchBarValue}`);
+
 			books = data.data;
 			error = false;
 		} catch (err) {
@@ -60,6 +62,10 @@
 									>
 								</BookInTable>
 							</td>
+						</tr>
+					{:else}
+						<tr>
+							<td> Não há livros!! </td>
 						</tr>
 					{/each}
 				{/if}

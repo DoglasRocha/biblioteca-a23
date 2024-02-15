@@ -11,7 +11,10 @@
 
 	const searchBarOnClick = async () => {
 		try {
-			data = await api.get(`/livros/buscar?name=${searchBarValue}`);
+			if (searchBarValue.trim() != '')
+				data = await api.get(`/livros/buscar?name=${searchBarValue}`);
+			else data = await api.get(`/livros/buscar`);
+
 			books = data.data;
 			error = false;
 		} catch (err) {
@@ -47,6 +50,10 @@
 									<a href={`/emprestar/${book.id}`} class="btn btn-primary">Emprestar</a>
 								</BookInTable>
 							</td>
+						</tr>
+					{:else}
+						<tr>
+							<td> Não há livros!! </td>
 						</tr>
 					{/each}
 				{/if}
