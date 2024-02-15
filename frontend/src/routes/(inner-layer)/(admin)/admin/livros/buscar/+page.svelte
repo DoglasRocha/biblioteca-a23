@@ -11,9 +11,8 @@
 
 	const searchBarOnClick = async () => {
 		try {
-			if (searchBarValue.trim() != '')
-				data = await api.get(`/livros/buscar?name=${searchBarValue}`);
-			else data = await api.get(`/livros/buscar`);
+			if (searchBarValue.trim() == '') data = await api.get(`/admin/livros/buscar`);
+			else data = await api.get(`/admin/livros/buscar?name=${searchBarValue}`);
 
 			books = data.data;
 			error = false;
@@ -46,8 +45,21 @@
 					{#each books as book}
 						<tr>
 							<td>
-								<BookInTable {book}>
-									<a href={`/emprestar/${book.id}`} class="btn btn-primary">Emprestar</a>
+								<BookInTable {book} admin={true}>
+									<a href={`/admin/livros/editar/${book.id}`} class="btn btn-secondary"> Editar </a>
+									<button
+										type="button"
+										class="btn btn-danger ms-1"
+										on:click={async () => {
+											let confirmation = confirm(
+												'Você tem certeza que deseja deletar esse livro e todas as suas cópias?'
+											);
+											if (confirmation) {
+												//await api.delete(`/admin/livros/deletar/${book.id}`);
+												document.location.href = document.location.href + '/';
+											}
+										}}>Deletar</button
+									>
 								</BookInTable>
 							</td>
 						</tr>

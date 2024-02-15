@@ -3,13 +3,12 @@
 	import FormField from '$lib/components/form-field.svelte';
 	import BlankForm from '$lib/components/blank-form.svelte';
 	import axios from 'axios';
+	import { api } from '$lib/utils/api.js';
+	export let data;
 
-	let book = {
-		name: '',
-		isbn: '',
-		description: '',
-		gender: ''
-	};
+	let book = data.book;
+
+	let errorFromServer;
 
 	const handleISBNSubmit = async () => {
 		// 8575421131 - codigo para teste
@@ -25,10 +24,23 @@
 			book = book;
 		}
 	};
+
+	const handleSubmit = async () => {
+		try {
+			book.copies = parseInt(book.copies);
+			let request = await api.put(`/admin/livros/editar/${book.id}`, book);
+
+			if (request.status == 200) {
+				document.location.href = document.location.href + '/';
+			}
+		} catch (error) {
+			errorFromServer = error.response.data;
+		}
+	};
 </script>
 
 <Card class="w-75">
-	<h1 class="text-center">Cadastro de livro</h1>
+	<h1 class="text-center">Atualização de livro</h1>
 	<BlankForm class="container">
 		<div class="row">
 			<div class="col">
@@ -59,10 +71,27 @@
 				</div>
 			</div>
 			<div class="col">
-				<FormField name="book-gender" label="Gênero do livro" bind:value={book.gender} required />
+				<FormField name="book-gender" label="Gênero do livro" bind:value={book.gender} />
+				<FormField
+					name="book-count"
+					label="Quantidade de cópias"
+					bind:value={book.copies}
+					type="number"
+				/>
 			</div>
+		</div>
+		<div class="row">
+			<div class="col">
+				{#if errorFromServer}
+					<div class="mt-3 text-danger">
+						<p>Ocorreu um erro. Talvez isso ajude:</p>
+						<p>{errorFromServer}</p>
+					</div>
+				{/if}
+			</div>
+			<div class="col"></div>
 			<div class="d-flex justify-content-end mt-3">
-				<button type="submit" class="btn btn-primary">Cadastrar</button>
+				<button type="submit" class="btn btn-primary" on:click={handleSubmit}>Atualizar</button>
 			</div>
 		</div>
 	</BlankForm>

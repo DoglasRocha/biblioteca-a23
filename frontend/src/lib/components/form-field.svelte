@@ -4,6 +4,9 @@
 	export let label = '';
 	export let placeholder = '';
 	export let value = '';
+	export let errorMsg = '';
+	export let validation = /.*/;
+	export let isInvalid = false;
 	export let required = false;
 </script>
 
@@ -18,7 +21,17 @@ Parameters:
 - placeholder
 - value
   ```jsx
-  <FormField name="example" type="email" label="Email" placeholder="example@email.com" bind:value={value} required/>
+  <FormField 
+  	name="example" 
+	type="email" 
+	label="Email" 
+	placeholder="example@email.com" 
+	bind:value={value} 
+	errorMsg="example"
+	validation={/example/}
+	bind:isInvalid={isInvalid}
+	required
+  />
 	```
 -->
 
@@ -33,5 +46,17 @@ Parameters:
 		bind:value
 		class={'form-control ' + ($$restProps.class ?? '')}
 		{required}
+		on:input={() => {
+			isInvalid = !validation.test(value);
+		}}
 	/>
+	{#if isInvalid}
+		<p class="little text-danger">{errorMsg}</p>
+	{/if}
 </div>
+
+<style>
+	.little {
+		font-size: 10px;
+	}
+</style>

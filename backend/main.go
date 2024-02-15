@@ -1,19 +1,25 @@
 package main
 
 import (
-	"fmt"
+	"biblioteca-a23/database"
+	"biblioteca-a23/routes"
 
-	"golang.org/x/crypto/bcrypt"
+	"github.com/joho/godotenv"
+	//"biblioteca-a23/models"
+	//"fmt"
 )
 
 func main() {
-	var teste string = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-
-	hash, err := bcrypt.GenerateFromPassword([]byte(teste), bcrypt.MinCost)
-
+	// loads environment variables
+	err := godotenv.Load(".env")
 	if err != nil {
-		panic("aaaaa")
+		panic("Error loading .env file")
 	}
 
-	fmt.Print(string(hash))
+	// init database
+	database.ConnectToDatabase()
+	database.MakeMigration()
+
+	// init router
+	routes.SetupRoutes()
 }
