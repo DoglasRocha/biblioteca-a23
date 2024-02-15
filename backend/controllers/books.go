@@ -12,26 +12,12 @@ import (
 
 func RegisterBook(w http.ResponseWriter, r *http.Request) {
 	// checks if user is admin
-	cookie, err := r.Cookie("accessToken")
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintln(w, "Erro ao acessar cookie")
-		return
-	}
-	status, _, err := check_admin(cookie)
-	if err != nil {
-		w.WriteHeader(status)
-		fmt.Fprintln(w, "Erro ao validar usuário")
-		return
-	}
-
+	status := is_admin_autenticated(w, r)
 	if status != http.StatusOK {
-		w.WriteHeader(http.StatusForbidden)
-		fmt.Fprintln(w, "Você não possui acesso a esta parte do sistema")
 		return
 	}
 
-	err = register_book(r)
+	err := register_book(r)
 	if err != nil {
 		fmt.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -46,31 +32,14 @@ func RegisterBook(w http.ResponseWriter, r *http.Request) {
 func SearchBooksByName(w http.ResponseWriter, r *http.Request) {
 	var books []models.Book
 
-	// check if user is authorized
-	cookie, err := r.Cookie("accessToken")
-	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		fmt.Fprintln(w, "Erro ao acessar cookie")
-		return
-	}
-
-	status, message, err := check_reader(cookie)
+	status := is_reader_authenticated(w, r)
 	if status != http.StatusOK {
-		w.WriteHeader(status)
-		fmt.Fprintln(w, message)
 		return
 	}
 
 	// get parameters
 	query_params := r.URL.Query()
-	book_name := query_params.Get("name")
-
-	if book_name == "" && len(query_params) != 0 {
-		w.WriteHeader(http.StatusNotFound)
-		json.NewEncoder(w).Encode([]models.Book{})
-		return
-	}
-	database.DB.Where("name LIKE ?", book_name+"%").Limit(50).Find(&books)
+	status, books = search_book_by_name(query_params)
 
 	json.NewEncoder(w).Encode(books)
 }
@@ -78,18 +47,8 @@ func SearchBooksByName(w http.ResponseWriter, r *http.Request) {
 func SearchBookById(w http.ResponseWriter, r *http.Request) {
 	var book models.Book
 
-	// check if user is authorized
-	cookie, err := r.Cookie("accessToken")
-	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		fmt.Fprintln(w, "Erro ao acessar cookie")
-		return
-	}
-
-	status, message, err := check_reader(cookie)
+	status := is_reader_authenticated(w, r)
 	if status != http.StatusOK {
-		w.WriteHeader(status)
-		fmt.Fprintln(w, message)
 		return
 	}
 
@@ -105,31 +64,13 @@ func SearchBookById(w http.ResponseWriter, r *http.Request) {
 func SearchBooksByNameAdmin(w http.ResponseWriter, r *http.Request) {
 	var books []models.Book
 
-	// check if user is authorized
-	cookie, err := r.Cookie("accessToken")
-	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		fmt.Fprintln(w, "Erro ao acessar cookie")
-		return
-	}
-
-	status, message, err := check_admin(cookie)
+	status := is_admin_autenticated(w, r)
 	if status != http.StatusOK {
-		w.WriteHeader(status)
-		fmt.Fprintln(w, message)
 		return
 	}
 
 	// get parameters
 	query_params := r.URL.Query()
-	/*book_name := query_params.Get("name")
-
-	if book_name == "" && len(query_params) != 0 {
-		w.WriteHeader(http.StatusNotFound)
-		json.NewEncoder(w).Encode([]models.Book{})
-		return
-	}
-	database.DB.Where("name LIKE ?", book_name+"%").Limit(50).Find(&books)*/
 	status, books = search_book_by_name(query_params)
 
 	w.WriteHeader(status)
@@ -139,18 +80,8 @@ func SearchBooksByNameAdmin(w http.ResponseWriter, r *http.Request) {
 func SearchBookByIdAdmin(w http.ResponseWriter, r *http.Request) {
 	var book models.Book
 
-	// check if user is authorized
-	cookie, err := r.Cookie("accessToken")
-	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		fmt.Fprintln(w, "Erro ao acessar cookie")
-		return
-	}
-
-	status, message, err := check_admin(cookie)
+	status := is_admin_autenticated(w, r)
 	if status != http.StatusOK {
-		w.WriteHeader(status)
-		fmt.Fprintln(w, message)
 		return
 	}
 
@@ -161,4 +92,68 @@ func SearchBookByIdAdmin(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(book)
+}
+
+func UpdateBook(w http.ResponseWriter, r *http.Request) {
+	var book_fields_to_update, not_updated_book models.Book
+
+	status := is_admin_autenticated(w, r)
+	if status != http.StatusOK {
+		return
+	}
+
+	// json from request
+	err := json.NewDecoder(r.Body).Decode(&book_fields_to_update)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintln(w, "Erro ao processar requisição")
+		return
+	}
+
+	// get parameters
+	id := mux.Vars(r)["id"]
+	err = database.DB.First(&not_updated_book, id).Error
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintln(w, "Não há livro com esse identificador")
+		return
+	}
+	book_id := int(not_updated_book.ID)
+
+	// logic to create or delete copies
+	copies_diff := int(book_fields_to_update.CopiesCount) - int(not_updated_book.CopiesCount)
+	if copies_diff > 0 {
+		err = create_copies(copies_diff, book_id)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			fmt.Fprintln(w, "Erro ao criar cópias do livro")
+			return
+		}
+	} else if copies_diff < 0 {
+		err = delete_copies(-copies_diff, book_id)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			fmt.Fprintln(w, "Erro ao deletar cópias do livro")
+			return
+		}
+	}
+
+	// makes sure the id update is the id from the url
+	book_fields_to_update.ID = not_updated_book.ID
+
+	// updates the count of copies
+	var copies_count int64
+	database.DB.Model(&models.Copy{}).Where("book_id = ?", book_id).Count(&copies_count)
+	book_fields_to_update.CopiesCount = uint(copies_count)
+
+	// updates the book
+	err = database.DB.Save(&book_fields_to_update).Error
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintln(w, "Erro ao atualizar livro")
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintln(w, "Livro atualizado com sucesso")
 }
