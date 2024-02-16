@@ -130,3 +130,25 @@ func is_admin_autenticated(w http.ResponseWriter, r *http.Request) int {
 
 	return status
 }
+
+func get_id_from_cookie(cookie *http.Cookie) (int, error) {
+	tokenString := cookie.Value
+
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+
+		return []byte(os.Getenv("SIGNING_KEY")), nil
+	})
+
+	if err != nil {
+		return -1, err
+	}
+
+	if claims, ok := token.Claims.(jwt.MapClaims); ok {
+		id := claims["id"]
+		return int(id.(float64)), nil
+	}
+	return -1, err
+}

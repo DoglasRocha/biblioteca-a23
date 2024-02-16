@@ -1,18 +1,21 @@
 <script>
 	import FormField from '$lib/components/form-field.svelte';
 	import Card from '$lib/components/card.svelte';
+	export let data;
 
 	let userData = {
-		firstName: '',
-		lastName: '',
+		name: '',
+		surname: '',
 		email: '',
 		password: '',
-		birthDate: '',
-		phoneNumber: '',
+		birthday: '',
+		phone_number: '',
 		address: ''
 	};
 
-	let passwordConfirmation;
+	userData = data.userData;
+
+	let newPassword, passwordConfirmation;
 </script>
 
 <Card>
@@ -24,7 +27,7 @@
 					name="first-name"
 					label="Nome"
 					placeholder="João"
-					bind:value={userData.firstName}
+					bind:value={userData.name}
 					type="text"
 					required
 				/>
@@ -34,7 +37,7 @@
 					name="last-name"
 					label="Sobrenome"
 					placeholder="Silva"
-					bind:value={userData.lastName}
+					bind:value={userData.surname}
 					type="text"
 					required
 				/>
@@ -49,21 +52,21 @@
 			required
 		/>
 		<FormField
-			name="password"
+			name="old-password"
 			label="Senha Antiga"
 			bind:value={userData.password}
 			type="password"
 			required
 		/>
 		<FormField
-			name="password-confirmation"
+			name="new-passoword"
 			label="Nova senha"
-			bind:value={passwordConfirmation}
+			bind:value={newPassword}
 			type="password"
 			required
 		/>
 		<FormField
-			name="password-confirmation"
+			name="new-password-confirmation"
 			label="Confirmação de nova senha"
 			bind:value={passwordConfirmation}
 			type="password"
@@ -72,14 +75,14 @@
 		<FormField
 			name="birth-date"
 			label="Data de nascimento"
-			bind:value={userData.birthDate}
+			bind:value={userData.birthday}
 			type="date"
 			required
 		/>
 		<FormField
 			name="phone-number"
 			label="Número de telefone"
-			bind:value={userData.phoneNumber}
+			bind:value={userData.phone_number}
 			type="tel"
 			placeholder="(41) 99999-9999"
 			pattern="([0-9]{2}) [0-9]{5}-[0-9]{4}"
