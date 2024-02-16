@@ -2,6 +2,7 @@
 	import FormField from '$lib/components/form-field.svelte';
 	import Card from '$lib/components/card.svelte';
 	import BlankForm from '$lib/components/blank-form.svelte';
+	import { isValidUserInput } from '$lib/utils/helpers.js';
 	export let data;
 
 	let userData = data.userData;
@@ -25,21 +26,23 @@
 	const handleSubmit = async () => {
 		if (!isValidUserInput(isInvalid)) return;
 
-		if (userData.password != passwordConfirmation) {
-			isInvalid.passwordConfirmation = true;
-			return;
+		if (newPassword) {
+			if (newPassword != passwordConfirmation) {
+				isInvalid.passwordConfirmation = true;
+				return;
+			} else userData.new_password = newPassword;
 		}
 
 		// go date format
 		userData.birthday = `${userData.birthday}T00:00:00Z`;
 
-		try {
-			let request = await api.post('/cadastro', userData);
+		// try {
+		// 	let request = await api.post('/cadastro', userData);
 
-			if (request.status == 201) document.location.href = '/login';
-		} catch (error) {
-			errorFromServer = error.response.data;
-		}
+		// 	if (request.status == 201) document.location.href = '/login';
+		// } catch (error) {
+		// 	errorFromServer = error.response.data;
+		// }
 		// workaround for html "required"
 		userData.birthday = userData.birthday.split('T')[0];
 	};
@@ -106,6 +109,7 @@
 			name="new-passoword"
 			label="Nova senha"
 			bind:value={newPassword}
+			errorMsg="Sua nova senha deve possuir mais de oito dígitos"
 			validation={/.{8,}/}
 			bind:isInvalid={isInvalid.newPassword}
 			type="password"
@@ -160,13 +164,7 @@
 		{/if}
 
 		<div class="mt-3 d-flex justify-content-end">
-			<button
-				type="submit"
-				class="btn btn-primary"
-				on:click={() => {
-					document.location.href = '/login';
-				}}>Atualizar</button
-			>
+			<button type="submit" class="btn btn-primary" on:click={handleSubmit}>Atualizar</button>
 		</div>
 	</BlankForm>
 </Card>
