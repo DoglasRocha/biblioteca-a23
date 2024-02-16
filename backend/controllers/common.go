@@ -104,7 +104,7 @@ func is_reader_authenticated(w http.ResponseWriter, r *http.Request) int {
 		fmt.Fprintln(w, "Erro ao acessar cookie")
 		return http.StatusInternalServerError
 	}
-	status, message, err := check_reader(cookie)
+	status, message, _ := check_reader(cookie)
 	if status != http.StatusOK {
 		w.WriteHeader(status)
 		fmt.Fprintln(w, message)
@@ -121,7 +121,7 @@ func is_admin_autenticated(w http.ResponseWriter, r *http.Request) int {
 		fmt.Fprintln(w, "Erro ao acessar cookie")
 		return http.StatusInternalServerError
 	}
-	status, message, err := check_admin(cookie)
+	status, message, _ := check_admin(cookie)
 	if status != http.StatusOK {
 		w.WriteHeader(status)
 		fmt.Fprintln(w, message)

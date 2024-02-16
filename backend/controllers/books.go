@@ -41,6 +41,7 @@ func SearchBooksByName(w http.ResponseWriter, r *http.Request) {
 	query_params := r.URL.Query()
 	status, books = search_available_books_by_name(query_params)
 
+	w.WriteHeader(status)
 	json.NewEncoder(w).Encode(books)
 }
 

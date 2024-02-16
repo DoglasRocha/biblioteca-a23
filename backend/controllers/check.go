@@ -12,7 +12,7 @@ func CheckReader(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	status, message, err := check_reader(cookie)
+	status, message, _ := check_reader(cookie)
 
 	w.WriteHeader(status)
 	fmt.Fprintln(w, message)
@@ -25,7 +25,7 @@ func CheckAdmin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	status, message, err := check_admin(cookie)
+	status, message, _ := check_admin(cookie)
 
 	w.WriteHeader(status)
 	fmt.Fprintln(w, message)
