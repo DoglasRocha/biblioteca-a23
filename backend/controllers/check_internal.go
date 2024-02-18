@@ -7,7 +7,7 @@ import (
 )
 
 func check_reader(cookie *http.Cookie) (int, string, error) {
-	id, err := get_id_from_cookie(cookie)
+	id, err := parse_cookie(cookie)
 
 	if err != nil {
 		return http.StatusUnauthorized, "Erro ao processar token", err
@@ -30,7 +30,7 @@ func check_reader(cookie *http.Cookie) (int, string, error) {
 }
 
 func check_admin(cookie *http.Cookie) (int, string, error) {
-	id, err := get_id_from_cookie(cookie)
+	id, err := parse_cookie(cookie)
 
 	if err != nil {
 		return http.StatusUnauthorized, "Erro ao processar token", err

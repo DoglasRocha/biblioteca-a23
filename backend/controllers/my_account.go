@@ -16,18 +16,8 @@ func GetMyAccount(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// getting id from cookie
-	cookie, err := r.Cookie("accessToken")
+	id, err := get_id_from_request_cookie(w, r)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprintln(w, "Erro ao ler cookie")
-		return
-	}
-
-	id, err := get_id_from_cookie(cookie)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprintln(w, "Erro ao ler identificador")
 		return
 	}
 
@@ -60,18 +50,8 @@ func GetMyAccountAdmin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// getting id from cookie
-	cookie, err := r.Cookie("accessToken")
+	id, err := get_id_from_request_cookie(w, r)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprintln(w, "Erro ao ler cookie")
-		return
-	}
-
-	id, err := get_id_from_cookie(cookie)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprintln(w, "Erro ao ler identificador")
 		return
 	}
 

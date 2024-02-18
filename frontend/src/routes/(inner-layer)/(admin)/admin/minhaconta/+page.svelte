@@ -31,7 +31,7 @@
 		}
 
 		// try {
-		// 	let request = await api.put('/minhaconta', userData);
+		// 	let request = await api.put('/admin/minhaconta', userData);
 
 		// 	if (request.status == 201) document.location.href = '/login';
 		// } catch (error) {
@@ -42,7 +42,7 @@
 </script>
 
 <Card>
-	<h1>Cadastro</h1>
+	<h1 class="text-center">Minha Conta</h1>
 	<div class="mx-2">
 		<p>Aqui você pode atualizar seus dados cadastrais ou apagar sua conta.</p>
 		<p>Para qualquer atualização, é necessário fornecer sua senha no campo "Senha Atual".</p>

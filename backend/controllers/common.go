@@ -131,7 +131,7 @@ func is_admin_authenticated(w http.ResponseWriter, r *http.Request) int {
 	return status
 }
 
-func get_id_from_cookie(cookie *http.Cookie) (int, error) {
+func parse_cookie(cookie *http.Cookie) (int, error) {
 	tokenString := cookie.Value
 
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
@@ -151,4 +151,22 @@ func get_id_from_cookie(cookie *http.Cookie) (int, error) {
 		return int(id.(float64)), nil
 	}
 	return -1, err
+}
+
+func get_id_from_request_cookie(w http.ResponseWriter, r *http.Request) (int, error) {
+	cookie, err := r.Cookie("accessToken")
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintln(w, "Erro ao ler cookie")
+		return -1, err
+	}
+
+	id, err := parse_cookie(cookie)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintln(w, "Erro ao ler identificador")
+		return -1, err
+	}
+
+	return id, nil
 }

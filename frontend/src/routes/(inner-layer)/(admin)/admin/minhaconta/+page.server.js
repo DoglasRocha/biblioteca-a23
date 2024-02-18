@@ -21,7 +21,6 @@ export async function load({cookies}) {
         }
     }
     catch (error) {
-
         redirect(303, "/admin/error")
     }
 
