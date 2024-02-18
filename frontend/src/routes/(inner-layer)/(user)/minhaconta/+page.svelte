@@ -37,7 +37,7 @@
 		userData.birthday = `${userData.birthday}T00:00:00Z`;
 
 		// try {
-		// 	let request = await api.post('/cadastro', userData);
+		// 	let request = await api.put('/minhaconta', userData);
 
 		// 	if (request.status == 201) document.location.href = '/login';
 		// } catch (error) {

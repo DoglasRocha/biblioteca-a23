@@ -12,7 +12,7 @@ import (
 
 func RegisterBook(w http.ResponseWriter, r *http.Request) {
 	// checks if user is admin
-	status := is_admin_autenticated(w, r)
+	status := is_admin_authenticated(w, r)
 	if status != http.StatusOK {
 		return
 	}
@@ -65,7 +65,7 @@ func SearchBookById(w http.ResponseWriter, r *http.Request) {
 func SearchBooksByNameAdmin(w http.ResponseWriter, r *http.Request) {
 	var books []models.Book
 
-	status := is_admin_autenticated(w, r)
+	status := is_admin_authenticated(w, r)
 	if status != http.StatusOK {
 		return
 	}
@@ -81,7 +81,7 @@ func SearchBooksByNameAdmin(w http.ResponseWriter, r *http.Request) {
 func SearchBookByIdAdmin(w http.ResponseWriter, r *http.Request) {
 	var book models.Book
 
-	status := is_admin_autenticated(w, r)
+	status := is_admin_authenticated(w, r)
 	if status != http.StatusOK {
 		return
 	}
@@ -98,7 +98,7 @@ func SearchBookByIdAdmin(w http.ResponseWriter, r *http.Request) {
 func UpdateBook(w http.ResponseWriter, r *http.Request) {
 	var book_fields_to_update, not_updated_book models.Book
 
-	status := is_admin_autenticated(w, r)
+	status := is_admin_authenticated(w, r)
 	if status != http.StatusOK {
 		return
 	}

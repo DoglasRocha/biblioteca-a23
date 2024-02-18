@@ -53,5 +53,45 @@ func GetMyAccount(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetMyAccountAdmin(w http.ResponseWriter, r *http.Request) {
+	var admin models.Admin
 
+	status := is_admin_authenticated(w, r)
+	if status != http.StatusOK {
+		return
+	}
+
+	// getting id from cookie
+	cookie, err := r.Cookie("accessToken")
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintln(w, "Erro ao ler cookie")
+		return
+	}
+
+	id, err := get_id_from_cookie(cookie)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintln(w, "Erro ao ler identificador")
+		return
+	}
+
+	err = database.DB.Where("user_id = ?", id).First(&admin).Error
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		fmt.Fprintln(w, "Erro ao localizar usuário leitor na base de dados")
+		return
+	}
+
+	err = database.DB.First(&admin.User, id).Error
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		fmt.Fprintln(w, "Erro ao localizar usuário leitor na base de dados")
+		return
+	}
+
+	// hide password from response
+	admin.User.Password = nil
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(&admin)
 }

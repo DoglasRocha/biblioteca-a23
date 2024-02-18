@@ -114,7 +114,7 @@ func is_reader_authenticated(w http.ResponseWriter, r *http.Request) int {
 	return status
 }
 
-func is_admin_autenticated(w http.ResponseWriter, r *http.Request) int {
+func is_admin_authenticated(w http.ResponseWriter, r *http.Request) int {
 	cookie, err := r.Cookie("accessToken")
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
