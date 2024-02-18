@@ -28,6 +28,8 @@ func SetupRoutes() {
 	router.HandleFunc("/api/admin/livros/editar/{id}", controllers.UpdateBook).Methods("PUT")
 	router.HandleFunc("/api/minhaconta", controllers.GetMyAccount).Methods("GET")
 	router.HandleFunc("/api/admin/minhaconta", controllers.GetMyAccountAdmin).Methods("GET")
+	router.HandleFunc("/api/minhaconta", controllers.UpdateMyAccount).Methods("PUT")
+	router.HandleFunc("/api/admin/minhaconta", controllers.UpdateMyAccountAdmin).Methods("PUT")
 
 	headersOk := handlers.AllowedHeaders([]string{
 		"X-Requested-With",
