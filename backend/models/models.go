@@ -80,16 +80,23 @@ type Copy struct {
 	IsBorrowed bool `json:"is_borrowed" gorm:"default:false"`
 }
 
+type Request struct {
+	gorm.Model
+	ID         uint `json:"id" gorm:"primary_key"`
+	BookID     int  `json:"book_id" validate:"required"`
+	ReaderID   int  `json:"reader_id" validate:"required"`
+	IsAccepted bool `json:"is_accepted" gorm:"default:false"`
+}
+
 type Loan struct {
 	gorm.Model
-	ID           uint      `json:"id" gorm:"primary_key"`
-	CopyID       int       `json:"copy_id" validate:"required"`
-	ReaderID     int       `json:"reader_id" validate:"required"`
-	StartDate    time.Time `json:"start_date" gorm:"type:date"`
-	ReturnDate   time.Time `json:"return_date" gorm:"type:date"`
-	HasRenewed   bool      `json:"has_renewed" gorm:"default:false"`
-	HasReturned  bool      `json:"has_returned" gorm:"default:false"`
-	IsAuthorized bool      `json:"is_authorized" gorm:"default:false"`
+	ID          uint      `json:"id" gorm:"primary_key"`
+	CopyID      int       `json:"copy_id" validate:"required"`
+	RequestID   int       `json:"request_id" validate:"required"`
+	StartDate   time.Time `json:"start_date" gorm:"type:date"`
+	ReturnDate  time.Time `json:"return_date" gorm:"type:date"`
+	HasRenewed  bool      `json:"has_renewed" gorm:"default:false"`
+	HasReturned bool      `json:"has_returned" gorm:"default:false"`
 }
 
 func (loan *Loan) Validate() error {
