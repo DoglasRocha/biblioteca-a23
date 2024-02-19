@@ -93,6 +93,7 @@ type Loan struct {
 	ID          uint      `json:"id" gorm:"primary_key"`
 	CopyID      int       `json:"copy_id" validate:"required"`
 	RequestID   int       `json:"request_id" validate:"required"`
+	ReaderID    int       `json:"reader_id" validate:"required"`
 	StartDate   time.Time `json:"start_date" gorm:"type:date"`
 	ReturnDate  time.Time `json:"return_date" gorm:"type:date"`
 	HasRenewed  bool      `json:"has_renewed" gorm:"default:false"`
