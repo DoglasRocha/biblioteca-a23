@@ -92,7 +92,7 @@ func UpdateMyAccount(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	updated_reader_data, new_password, err = read_request_body(w, r)
+	updated_reader_data, new_password, err = read_reader_request_body(w, r)
 	if err != nil {
 		return
 	}
@@ -123,7 +123,7 @@ func UpdateMyAccount(w http.ResponseWriter, r *http.Request) {
 
 	// updates password
 	if new_password.NewPassword != "" {
-		if err = update_password(w, r, new_password, updated_reader_data); err != nil {
+		if err = update_password(w, r, new_password, updated_reader_data.User); err != nil {
 			return
 		}
 	}
@@ -149,5 +149,71 @@ func UpdateMyAccount(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateMyAccountAdmin(w http.ResponseWriter, r *http.Request) {
+	var updated_admin_data models.Admin
+	var current_admin_data models.Admin
+	var new_password newPassword
 
+	if status := is_admin_authenticated(w, r); status != http.StatusOK {
+		return
+	}
+
+	id, err := get_id_from_request_cookie(w, r)
+	if err != nil {
+		return
+	}
+
+	updated_admin_data, new_password, err = read_admin_request_body(w, r)
+	if err != nil {
+		return
+	}
+
+	current_admin_data, err = find_admin_by_id(id)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		fmt.Fprintln(w, "Erro ao encontrar usuário")
+		return
+	}
+
+	// checks if password is correct
+	if err = bcrypt.CompareHashAndPassword(
+		[]byte(*current_admin_data.User.Password),
+		[]byte(*updated_admin_data.User.Password),
+	); err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		fmt.Fprintln(w, "Senha incorreta!")
+		return
+	}
+
+	// password comes unhashed from request
+	updated_admin_data.User.Password = current_admin_data.User.Password
+
+	// needs to do it otherwise it is going to throw an error
+	updated_admin_data.UserID = uint(id)
+	updated_admin_data.User.ID = uint(id)
+
+	// updates password
+	if new_password.NewPassword != "" {
+		if err = update_password(w, r, new_password, updated_admin_data.User); err != nil {
+			return
+		}
+	}
+
+	if err = updated_admin_data.Validate(); err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintln(w, "Erro ao validar dados de usuário")
+		return
+	}
+
+	// needs to do it otherwise it is going to throw an error
+	updated_admin_data.User.CreatedAt = current_admin_data.User.CreatedAt
+
+	if err = update_admin_in_db(updated_admin_data); err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintln(w, "Erro ao salvar usuário no banco de dados")
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintln(w, "Usuário atualizado com sucesso")
 }

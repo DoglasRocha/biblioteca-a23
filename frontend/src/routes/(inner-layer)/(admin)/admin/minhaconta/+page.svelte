@@ -3,6 +3,7 @@
 	import Card from '$lib/components/card.svelte';
 	import BlankForm from '$lib/components/blank-form.svelte';
 	import { isValidUserInput } from '$lib/utils/helpers.js';
+	import { api } from '$lib/utils/api.js';
 	export let data;
 
 	let userData = data.userData;
@@ -30,14 +31,13 @@
 			} else userData.new_password = newPassword;
 		}
 
-		// try {
-		// 	let request = await api.put('/admin/minhaconta', userData);
+		try {
+			let request = await api.put('/admin/minhaconta', userData);
 
-		// 	if (request.status == 201) document.location.href = '/login';
-		// } catch (error) {
-		// 	errorFromServer = error.response.data;
-		// }
-		// workaround for html "required"
+			if (request.status == 200) document.location.href = '/admin';
+		} catch (error) {
+			errorFromServer = error.response.data;
+		}
 	};
 </script>
 
