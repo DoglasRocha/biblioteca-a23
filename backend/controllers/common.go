@@ -114,7 +114,7 @@ func is_reader_authenticated(w http.ResponseWriter, r *http.Request) int {
 	return status
 }
 
-func is_admin_autenticated(w http.ResponseWriter, r *http.Request) int {
+func is_admin_authenticated(w http.ResponseWriter, r *http.Request) int {
 	cookie, err := r.Cookie("accessToken")
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -129,4 +129,44 @@ func is_admin_autenticated(w http.ResponseWriter, r *http.Request) int {
 	}
 
 	return status
+}
+
+func parse_cookie(cookie *http.Cookie) (int, error) {
+	tokenString := cookie.Value
+
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+
+		return []byte(os.Getenv("SIGNING_KEY")), nil
+	})
+
+	if err != nil {
+		return -1, err
+	}
+
+	if claims, ok := token.Claims.(jwt.MapClaims); ok {
+		id := claims["id"]
+		return int(id.(float64)), nil
+	}
+	return -1, err
+}
+
+func get_id_from_request_cookie(w http.ResponseWriter, r *http.Request) (int, error) {
+	cookie, err := r.Cookie("accessToken")
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintln(w, "Erro ao ler cookie")
+		return -1, err
+	}
+
+	id, err := parse_cookie(cookie)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintln(w, "Erro ao ler identificador")
+		return -1, err
+	}
+
+	return id, nil
 }

@@ -34,7 +34,11 @@ type Reader struct {
 }
 
 func (reader *Reader) Validate() error {
-	return Validator.Struct(reader)
+	err := Validator.Struct(reader.User)
+	if err != nil {
+		return err
+	}
+	return Validator.Struct(reader.User)
 }
 
 type Admin struct {
@@ -46,6 +50,10 @@ type Admin struct {
 }
 
 func (admin *Admin) Validate() error {
+	err := Validator.Struct(admin.User)
+	if err != nil {
+		return err
+	}
 	return Validator.Struct(admin)
 }
 
