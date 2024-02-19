@@ -98,20 +98,14 @@ func UpdateMyAccount(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = database.DB.Where("user_id = ?", id).First(&current_reader_data).Error
+	current_reader_data, err = find_reader_by_id(id)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		fmt.Fprintln(w, "Erro ao encontrar usuário")
 		return
 	}
 
-	err = database.DB.Where("id = ?", id).First(&current_reader_data.User).Error
-	if err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		fmt.Fprintln(w, "Erro ao encontrar usuário")
-		return
-	}
-
+	// checks if password is correct
 	err = bcrypt.CompareHashAndPassword(
 		[]byte(*current_reader_data.User.Password),
 		[]byte(*updated_reader_data.User.Password),
@@ -122,16 +116,31 @@ func UpdateMyAccount(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = new_password.Validate()
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintln(w, "A senha deve possuir mais de 8 caracteres")
-		return
-	}
+	// password comes unhashed from request
+	updated_reader_data.User.Password = current_reader_data.User.Password
 
 	// needs to do it otherwise it is going to throw an error
 	updated_reader_data.UserID = uint(id)
 	updated_reader_data.User.ID = uint(id)
+
+	// updates password
+	if new_password.NewPassword != "" {
+		err = new_password.Validate()
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			fmt.Fprintln(w, "A senha deve possuir mais de 8 caracteres")
+			return
+		}
+
+		password_hash, err := bcrypt.GenerateFromPassword([]byte(new_password.NewPassword), bcrypt.MinCost)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			fmt.Fprintln(w, "Erro ao hashear a nova senha")
+			return
+		}
+
+		*updated_reader_data.User.Password = string(password_hash)
+	}
 
 	err = updated_reader_data.Validate()
 	if err != nil {
@@ -139,23 +148,6 @@ func UpdateMyAccount(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Fprintln(w, "Erro ao validar dados de usuário")
 		return
-	}
-
-	err = updated_reader_data.User.Validate()
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintln(w, "Erro ao validar dados de usuário")
-		return
-	}
-
-	if new_password.NewPassword != "" {
-		password_hash, err := bcrypt.GenerateFromPassword([]byte(new_password.NewPassword), bcrypt.MinCost)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			fmt.Fprintln(w, "Erro ao hashear a nova senha")
-		}
-
-		*updated_reader_data.User.Password = string(password_hash)
 	}
 
 	// needs to do it otherwise it is going to throw an error

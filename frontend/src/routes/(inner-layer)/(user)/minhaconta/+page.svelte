@@ -3,6 +3,7 @@
 	import Card from '$lib/components/card.svelte';
 	import BlankForm from '$lib/components/blank-form.svelte';
 	import { isValidUserInput } from '$lib/utils/helpers.js';
+	import { api } from '$lib/utils/api.js';
 	export let data;
 
 	let userData = data.userData;
@@ -36,13 +37,13 @@
 		// go date format
 		userData.birthday = `${userData.birthday}T00:00:00Z`;
 
-		// try {
-		// 	let request = await api.put('/minhaconta', userData);
+		try {
+			let request = await api.put('/minhaconta', userData);
 
-		// 	if (request.status == 201) document.location.href = '/login';
-		// } catch (error) {
-		// 	errorFromServer = error.response.data;
-		// }
+			if (request.status == 200) document.location.href = '/';
+		} catch (error) {
+			errorFromServer = error.response.data;
+		}
 		// workaround for html "required"
 		userData.birthday = userData.birthday.split('T')[0];
 	};

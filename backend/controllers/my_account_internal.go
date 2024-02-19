@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"biblioteca-a23/database"
 	"biblioteca-a23/models"
 	"encoding/json"
 	"fmt"
@@ -49,4 +50,20 @@ func read_request_body(w http.ResponseWriter, r *http.Request) (models.Reader, n
 	}
 
 	return reader, new_password, nil
+}
+
+func find_reader_by_id(id int) (models.Reader, error) {
+	var reader models.Reader
+
+	err := database.DB.Where("user_id = ?", id).First(&reader).Error
+	if err != nil {
+		return models.Reader{}, err
+	}
+
+	err = database.DB.Where("id = ?", id).First(&reader.User).Error
+	if err != nil {
+		return models.Reader{}, err
+	}
+
+	return reader, nil
 }
