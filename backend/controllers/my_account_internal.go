@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type newPassword struct {
@@ -66,4 +68,37 @@ func find_reader_by_id(id int) (models.Reader, error) {
 	}
 
 	return reader, nil
+}
+
+func update_password(w http.ResponseWriter, r *http.Request, new_password newPassword, reader models.Reader) error {
+	err := new_password.Validate()
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintln(w, "A senha deve possuir mais de 8 caracteres")
+		return err
+	}
+
+	password_hash, err := bcrypt.GenerateFromPassword([]byte(new_password.NewPassword), bcrypt.MinCost)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintln(w, "Erro ao hashear a nova senha")
+		return err
+	}
+
+	*reader.User.Password = string(password_hash)
+	return nil
+}
+
+func update_reader_in_db(reader models.Reader) error {
+	err := database.DB.Save(&reader.User).Error
+	if err != nil {
+		return err
+	}
+
+	err = database.DB.Save(&reader).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

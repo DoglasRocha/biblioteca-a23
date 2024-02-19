@@ -83,8 +83,7 @@ func UpdateMyAccount(w http.ResponseWriter, r *http.Request) {
 	var current_reader_data models.Reader
 	var new_password newPassword
 
-	status := is_reader_authenticated(w, r)
-	if status != http.StatusOK {
+	if status := is_reader_authenticated(w, r); status != http.StatusOK {
 		return
 	}
 
@@ -106,11 +105,10 @@ func UpdateMyAccount(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// checks if password is correct
-	err = bcrypt.CompareHashAndPassword(
+	if err = bcrypt.CompareHashAndPassword(
 		[]byte(*current_reader_data.User.Password),
 		[]byte(*updated_reader_data.User.Password),
-	)
-	if err != nil {
+	); err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		fmt.Fprintln(w, "Senha incorreta!")
 		return
@@ -125,25 +123,12 @@ func UpdateMyAccount(w http.ResponseWriter, r *http.Request) {
 
 	// updates password
 	if new_password.NewPassword != "" {
-		err = new_password.Validate()
-		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			fmt.Fprintln(w, "A senha deve possuir mais de 8 caracteres")
+		if err = update_password(w, r, new_password, updated_reader_data); err != nil {
 			return
 		}
-
-		password_hash, err := bcrypt.GenerateFromPassword([]byte(new_password.NewPassword), bcrypt.MinCost)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			fmt.Fprintln(w, "Erro ao hashear a nova senha")
-			return
-		}
-
-		*updated_reader_data.User.Password = string(password_hash)
 	}
 
-	err = updated_reader_data.Validate()
-	if err != nil {
+	if err = updated_reader_data.Validate(); err != nil {
 		fmt.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Fprintln(w, "Erro ao validar dados de usuário")
@@ -153,15 +138,7 @@ func UpdateMyAccount(w http.ResponseWriter, r *http.Request) {
 	// needs to do it otherwise it is going to throw an error
 	updated_reader_data.User.CreatedAt = current_reader_data.User.CreatedAt
 
-	err = database.DB.Save(&updated_reader_data.User).Error
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprintln(w, "Erro ao salvar usuário no banco de dados")
-		return
-	}
-
-	err = database.DB.Save(&updated_reader_data).Error
-	if err != nil {
+	if err = update_reader_in_db(updated_reader_data); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintln(w, "Erro ao salvar usuário no banco de dados")
 		return
