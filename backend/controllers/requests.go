@@ -47,6 +47,7 @@ func CreateRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// create request in db
 	err = database.DB.Create(&request).Error
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
