@@ -31,8 +31,8 @@ func MakeMigration() {
 		&m.Reader{},
 		&m.Admin{},
 		&m.Book{},
-		&m.Copy{},
 		&m.Request{},
+		&m.Copy{},
 		&m.Loan{},
 	)
 }

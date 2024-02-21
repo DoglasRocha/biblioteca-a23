@@ -137,6 +137,7 @@ func UpdateMyAccount(w http.ResponseWriter, r *http.Request) {
 
 	// needs to do it otherwise it is going to throw an error
 	updated_reader_data.User.CreatedAt = current_reader_data.User.CreatedAt
+	updated_reader_data.CreatedAt = current_reader_data.CreatedAt
 
 	if err = update_reader_in_db(updated_reader_data); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -207,6 +208,7 @@ func UpdateMyAccountAdmin(w http.ResponseWriter, r *http.Request) {
 
 	// needs to do it otherwise it is going to throw an error
 	updated_admin_data.User.CreatedAt = current_admin_data.User.CreatedAt
+	updated_admin_data.CreatedAt = current_admin_data.CreatedAt
 
 	if err = update_admin_in_db(updated_admin_data); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
