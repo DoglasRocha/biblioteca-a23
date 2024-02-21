@@ -88,6 +88,10 @@ type Request struct {
 	IsAccepted bool `json:"is_accepted" gorm:"default:false"`
 }
 
+func (request *Request) Validate() error {
+	return Validator.Struct(request)
+}
+
 type Loan struct {
 	gorm.Model
 	ID          uint      `json:"id" gorm:"primary_key"`
