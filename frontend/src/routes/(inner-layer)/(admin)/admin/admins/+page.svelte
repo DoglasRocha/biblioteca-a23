@@ -34,7 +34,7 @@
 								<details>
 									<summary>{admin.User.name} {admin.User.surname}</summary>
 
-									<li><Bold>Email:</Bold> exemplo@email.com</li>
+									<li><Bold>Email:</Bold> {admin.User.email}</li>
 									<li><Bold>Status:</Bold> {admin.is_cleared ? 'Autorizado' : 'Não Autorizado'}</li>
 									<div class="d-flex justify-content-end">
 										{#if admin.is_cleared}
