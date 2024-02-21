@@ -11,6 +11,6 @@
 		>
 	</p>
 	<div class="d-flex justify-content-end">
-		<a href="/" class="btn btn-primary">Voltar para home</a>
+		<a href="/login" class="btn btn-primary">Voltar para login</a>
 	</div>
 </Card>

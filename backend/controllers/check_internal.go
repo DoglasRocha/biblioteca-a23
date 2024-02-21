@@ -30,16 +30,20 @@ func check_reader(cookie *http.Cookie) (int, string, error) {
 }
 
 func check_admin(cookie *http.Cookie) (int, string, error) {
+	var admin models.Admin
 	id, err := parse_cookie(cookie)
 
 	if err != nil {
 		return http.StatusUnauthorized, "Erro ao processar token", err
 	}
 
-	err = database.DB.Where("user_id = ?", id).First(&models.Admin{}).Error
+	err = database.DB.Where("user_id = ?", id).First(&admin).Error
 	// user is admin
 	if err == nil {
-		return http.StatusOK, "OK", nil
+		if admin.IsCleared {
+			return http.StatusOK, "OK", nil
+		}
+		return http.StatusNotAcceptable, "Admin não autorizado", nil
 	}
 
 	err = database.DB.Where("user_id = ?", id).First(&models.Reader{}).Error
