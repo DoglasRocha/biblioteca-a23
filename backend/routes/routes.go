@@ -30,6 +30,7 @@ func SetupRoutes() {
 	router.HandleFunc("/api/admin/minhaconta", controllers.GetMyAccountAdmin).Methods("GET")
 	router.HandleFunc("/api/minhaconta", controllers.UpdateMyAccount).Methods("PUT")
 	router.HandleFunc("/api/admin/minhaconta", controllers.UpdateMyAccountAdmin).Methods("PUT")
+	router.HandleFunc("/api/emprestar/{book_id}", controllers.CreateRequest).Methods("POST")
 
 	headersOk := handlers.AllowedHeaders([]string{
 		"X-Requested-With",
