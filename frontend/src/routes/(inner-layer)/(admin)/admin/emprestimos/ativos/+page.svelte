@@ -58,6 +58,11 @@
 				{:else}
 					<tr><td>Não há empréstimos ativos.</td></tr>
 				{/if}
+				{#if error}
+					<tr>
+						<td class="text-danger">{error}</td>
+					</tr>
+				{/if}
 			</tbody>
 		</table>
 	</div>
