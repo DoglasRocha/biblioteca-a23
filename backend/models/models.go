@@ -84,10 +84,10 @@ type Copy struct {
 type Request struct {
 	gorm.Model
 	ID         uint   `json:"id" gorm:"primary_key"`
-	BookID     int    `json:"book_id" validate:"required"`
-	Book       Book   ``
-	ReaderID   int    `json:"reader_id" validate:"required"`
-	Reader     Reader ``
+	BookID     uint   `json:"book_id" validate:"required"`
+	Book       Book   `validate:"-"`
+	ReaderID   uint   `json:"reader_id" validate:"required"`
+	Reader     Reader `validate:"-"`
 	IsAccepted bool   `json:"is_accepted" gorm:"default:false"`
 }
 
@@ -98,12 +98,10 @@ func (request *Request) Validate() error {
 type Loan struct {
 	gorm.Model
 	ID          uint      `json:"id" gorm:"primary_key"`
-	CopyID      int       `json:"copy_id" validate:"required"`
+	CopyID      uint      `json:"copy_id" validate:"required"`
 	Copy        Copy      ``
-	RequestID   int       `json:"request_id" validate:"required"`
+	RequestID   uint      `json:"request_id" validate:"required"`
 	Request     Request   ``
-	ReaderID    int       `json:"reader_id" validate:"required"`
-	Reader      Reader    ``
 	StartDate   time.Time `json:"start_date" gorm:"type:date"`
 	ReturnDate  time.Time `json:"return_date" gorm:"type:date"`
 	HasRenewed  bool      `json:"has_renewed" gorm:"default:false"`

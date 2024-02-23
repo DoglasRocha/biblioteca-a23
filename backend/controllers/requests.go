@@ -35,13 +35,15 @@ func CreateRequest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// create request
-	request.BookID = int(book.ID)
-	request.ReaderID = user_id
+	request.BookID = book.ID
+	request.ReaderID = uint(user_id)
 	request.IsAccepted = false
 
 	// validate request
 	err = request.Validate()
 	if err != nil {
+		fmt.Println(request)
+		fmt.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintln(w, "Erro ao validar solicitação")
 		return
