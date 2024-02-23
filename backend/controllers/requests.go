@@ -35,8 +35,8 @@ func CreateRequest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// create request
-	request.BookID = int(book.ID)
-	request.ReaderID = user_id
+	request.BookID = book.ID
+	request.ReaderID = uint(user_id)
 	request.IsAccepted = false
 
 	// validate request
