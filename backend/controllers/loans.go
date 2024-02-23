@@ -1,13 +1,13 @@
 package controllers
 
 import (
-	"biblioteca-a23/models"
+	//"biblioteca-a23/models"
 	"encoding/json"
 	"net/http"
 )
 
 func ActiveLoans(w http.ResponseWriter, r *http.Request) {
-	var active_loans []models.Loan
+	//var active_loans []models.Loan
 
 	status := is_admin_authenticated(w, r)
 	if status != http.StatusOK {

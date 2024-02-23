@@ -85,9 +85,9 @@ type Request struct {
 	gorm.Model
 	ID         uint   `json:"id" gorm:"primary_key"`
 	BookID     uint   `json:"book_id" validate:"required"`
-	Book       Book   ``
+	Book       Book   `validate:"-"`
 	ReaderID   uint   `json:"reader_id" validate:"required"`
-	Reader     Reader ``
+	Reader     Reader `validate:"-"`
 	IsAccepted bool   `json:"is_accepted" gorm:"default:false"`
 }
 

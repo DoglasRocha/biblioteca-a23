@@ -18,11 +18,11 @@ func get_active_loans(w http.ResponseWriter) ([]models.Loan, error) {
 		return []models.Loan{}, err
 	}
 
-	for _, loan := range active_loans {
-		err = database.PopulateLoan(&loan, loan.ID)
+	for i := range active_loans {
+		err = database.PopulateLoan(&active_loans[i], active_loans[i].ID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			fmt.Fprintln(w, "Erro buscar empréstimo ", loan.ID, " na base de dados")
+			fmt.Fprintln(w, "Erro buscar empréstimo ", active_loans[i].ID, " na base de dados")
 			return []models.Loan{}, err
 		}
 	}

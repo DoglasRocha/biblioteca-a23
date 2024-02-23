@@ -39,14 +39,28 @@ func MakeMigration() {
 
 // populating models
 func PopulateUser(user *m.User, id uint) error {
-	return DB.First(user, id).Error
+	err := DB.First(user, id).Error
+
+	user.Password = nil
+
+	return err
 }
 
 func PopulateReader(reader *m.Reader, id uint) error {
+	err := DB.First(reader, id).Error
+	if err != nil {
+		return err
+	}
+
 	return PopulateUser(&reader.User, reader.UserID)
 }
 
 func PopulateAdmin(admin *m.Admin, id uint) error {
+	err := DB.First(admin, id).Error
+	if err != nil {
+		return err
+	}
+
 	return PopulateUser(&admin.User, admin.UserID)
 }
 
@@ -55,11 +69,21 @@ func PopulateBook(book *m.Book, id uint) error {
 }
 
 func PopulateCopy(copy *m.Copy, id uint) error {
+	err := DB.First(copy, id).Error
+	if err != nil {
+		return err
+	}
+
 	return PopulateBook(&copy.Book, copy.BookID)
 }
 
 func PopulateRequest(request *m.Request, id uint) error {
-	err := PopulateBook(&request.Book, request.BookID)
+	err := DB.First(request, id).Error
+	if err != nil {
+		return err
+	}
+
+	err = PopulateBook(&request.Book, request.BookID)
 	if err != nil {
 		return err
 	}
@@ -68,7 +92,12 @@ func PopulateRequest(request *m.Request, id uint) error {
 }
 
 func PopulateLoan(loan *m.Loan, id uint) error {
-	err := PopulateCopy(&loan.Copy, loan.CopyID)
+	err := DB.First(loan, id).Error
+	if err != nil {
+		return err
+	}
+
+	err = PopulateCopy(&loan.Copy, loan.CopyID)
 	if err != nil {
 		return err
 	}

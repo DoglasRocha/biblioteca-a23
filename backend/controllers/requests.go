@@ -42,6 +42,8 @@ func CreateRequest(w http.ResponseWriter, r *http.Request) {
 	// validate request
 	err = request.Validate()
 	if err != nil {
+		fmt.Println(request)
+		fmt.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintln(w, "Erro ao validar solicitação")
 		return
