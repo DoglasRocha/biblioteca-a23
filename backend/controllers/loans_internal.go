@@ -29,3 +29,26 @@ func get_active_loans(w http.ResponseWriter) ([]models.Loan, error) {
 
 	return active_loans, nil
 }
+
+func get_history_of_loans(w http.ResponseWriter) ([]models.Loan, error) {
+	var history_of_loans []models.Loan
+
+	// get loans
+	err := database.DB.Where("has_returned = ?", true).Find(&history_of_loans).Error
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintln(w, "Erro buscar empréstimos ativos na base de dados")
+		return []models.Loan{}, err
+	}
+
+	for i := range history_of_loans {
+		err = database.PopulateLoan(&history_of_loans[i], history_of_loans[i].ID)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			fmt.Fprintln(w, "Erro buscar empréstimo ", history_of_loans[i].ID, " na base de dados")
+			return []models.Loan{}, err
+		}
+	}
+
+	return history_of_loans, nil
+}
