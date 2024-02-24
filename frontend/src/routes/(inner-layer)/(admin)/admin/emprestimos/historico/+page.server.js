@@ -5,7 +5,7 @@ export async function load({ cookies }) {
     const accessToken = cookies.get("accessToken")
 
     try {
-        let booksRequest = await api.get("/admin/emprestimos/ativos", {
+        let booksRequest = await api.get("/admin/emprestimos/historico", {
             headers: {
                 Cookie: `accessToken=${accessToken}`
             }
