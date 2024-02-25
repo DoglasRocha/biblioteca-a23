@@ -23,6 +23,7 @@ func SetupRoutes() {
 	router.HandleFunc("/api/admin/livros/cadastrar", controllers.RegisterBook).Methods("POST")
 	router.HandleFunc("/api/emprestar/{book_id}", controllers.CreateRequest).Methods("POST")
 	router.HandleFunc("/api/admin/emprestimos/aprovar/{request_id}", controllers.ApproveRequest).Methods("POST")
+
 	router.HandleFunc("/api/admin/emprestimos/rejeitar/{request_id}", controllers.DenyRequest).Methods("DELETE")
 
 	router.HandleFunc("/api/livros/buscar", controllers.SearchBooksByName).Methods("GET")
@@ -39,6 +40,7 @@ func SetupRoutes() {
 	router.HandleFunc("/api/admin/livros/editar/{id}", controllers.UpdateBook).Methods("PUT")
 	router.HandleFunc("/api/minhaconta", controllers.UpdateMyAccount).Methods("PUT")
 	router.HandleFunc("/api/admin/minhaconta", controllers.UpdateMyAccountAdmin).Methods("PUT")
+
 	router.HandleFunc("/api/admin/autorizar/{admin_id}", controllers.AuthorizeAdmin).Methods("PATCH")
 	router.HandleFunc("/api/admin/revogar/{admin_id}", controllers.RevokeAdmin).Methods("PATCH")
 
