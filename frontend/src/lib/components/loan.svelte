@@ -2,7 +2,6 @@
 	import Bold from './bold.svelte';
 
 	export let loan;
-	console.log(loan);
 </script>
 
 <details>
