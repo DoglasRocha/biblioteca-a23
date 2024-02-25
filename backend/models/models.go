@@ -75,8 +75,8 @@ func (book *Book) Validate() error {
 type Copy struct {
 	gorm.Model
 	ID         uint `json:"id" gorm:"primary_key"`
-	BookID     uint ``
-	Book       Book ``
+	BookID     uint `validate:"required"`
+	Book       Book `validate:"-"`
 	IsBorrowed bool `json:"is_borrowed" gorm:"default:false"`
 }
 
@@ -98,9 +98,9 @@ type Loan struct {
 	gorm.Model
 	ID          uint      `json:"id" gorm:"primary_key"`
 	CopyID      uint      `json:"copy_id" validate:"required"`
-	Copy        Copy      ``
+	Copy        Copy      `validate:"-"`
 	RequestID   uint      `json:"request_id" validate:"required"`
-	Request     Request   ``
+	Request     Request   `validate:"-"`
 	StartDate   time.Time `json:"start_date" gorm:"type:date"`
 	ReturnDate  time.Time `json:"return_date" gorm:"type:date"`
 	HasRenewed  bool      `json:"has_renewed" gorm:"default:false"`

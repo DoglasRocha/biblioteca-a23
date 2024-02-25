@@ -1,6 +1,5 @@
 <script>
 	import Card from '$lib/components/card.svelte';
-	import Bold from '$lib/components/bold.svelte';
 	import Loan from '../../../../../../lib/components/loan.svelte';
 
 	export let data;

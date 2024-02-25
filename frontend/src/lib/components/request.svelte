@@ -20,9 +20,9 @@
 		return newDate;
 	};
 
-	const handleOrder = (order, book_id) => {
+	const handleOrder = async (order, request_id) => {
 		try {
-			let request = api.post(`/admin/${order}/${book_id}`);
+			let request = await api.post(`/admin/emprestimos/${order}/${request_id}`);
 
 			if (request.status == 200) document.location.href += '/';
 		} catch (err) {
@@ -61,14 +61,14 @@
 		<button
 			type="button"
 			class="btn btn-danger ms-1"
-			on:click={() => handleOrder('rejeitar', request.book_id)}
+			on:click={() => handleOrder('rejeitar', request.id)}
 		>
 			Rejeitar
 		</button>
 		<button
 			type="button"
 			class="btn btn-success ms-1"
-			on:click={() => handleOrder('aprovar', request.book_id)}
+			on:click={() => handleOrder('aprovar', request.id)}
 		>
 			Aprovar
 		</button>

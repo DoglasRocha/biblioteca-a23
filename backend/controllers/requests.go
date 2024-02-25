@@ -80,3 +80,36 @@ func GetOpenRequests(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(&requests)
 }
+
+func ApproveRequest(w http.ResponseWriter, r *http.Request) {
+	var request models.Request
+
+	status := is_admin_authenticated(w, r)
+	if status != http.StatusOK {
+		return
+	}
+
+	// get request id from url
+	request_id := mux.Vars(r)["request_id"]
+
+	// checks if request exists and is not approved
+	err := database.DB.
+		Where("id = ? AND is_accepted = ?", request_id, false).
+		First(&request).Error
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		fmt.Fprintln(w, "Erro ao encontrar solicitacao de emprestimo")
+		return
+	}
+
+	err = create_loan_in_db(request, w, r)
+	if err != nil {
+		return
+	}
+
+	request.IsAccepted = true
+	database.DB.Save(&request)
+
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintln(w, "Empréstimo aprovado com sucesso")
+}
