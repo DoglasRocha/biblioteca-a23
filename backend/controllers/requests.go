@@ -27,6 +27,11 @@ func CreateRequest(w http.ResponseWriter, r *http.Request) {
 	// get parameters
 	book_id := mux.Vars(r)["book_id"]
 
+	// checks if user has active loan
+	if has_active_loan(user_id, w) {
+		return
+	}
+
 	// checks if book exists
 	err = database.DB.Where("id = ?", book_id).First(&book).Error
 	if err != nil {
@@ -102,7 +107,12 @@ func ApproveRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = create_loan_in_db(request, w, r)
+	// checks if user has active loan
+	if has_active_loan(int(request.ReaderID), w) {
+		return
+	}
+
+	err = create_loan_in_db(request, w)
 	if err != nil {
 		return
 	}

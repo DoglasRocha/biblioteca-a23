@@ -26,7 +26,7 @@ func get_open_requests() ([]models.Request, error) {
 	return requests, nil
 }
 
-func create_loan_in_db(request models.Request, w http.ResponseWriter, r *http.Request) error {
+func create_loan_in_db(request models.Request, w http.ResponseWriter) error {
 	var loan models.Loan
 	var copy models.Copy
 	// checks if there is available copies
