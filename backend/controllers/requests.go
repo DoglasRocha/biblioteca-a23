@@ -3,6 +3,7 @@ package controllers
 import (
 	"biblioteca-a23/database"
 	"biblioteca-a23/models"
+	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -59,4 +60,23 @@ func CreateRequest(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusCreated)
 	fmt.Fprintln(w, "Solicitação criada com sucesso.")
+}
+
+func GetOpenRequests(w http.ResponseWriter, r *http.Request) {
+	var requests []models.Request
+
+	status := is_admin_authenticated(w, r)
+	if status != http.StatusOK {
+		return
+	}
+
+	requests, err := get_open_requests()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintln(w, "Erro ao encontrar solicitações em aberto")
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(&requests)
 }

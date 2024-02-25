@@ -36,6 +36,7 @@ func SetupRoutes() {
 	router.HandleFunc("/api/admin/revogar/{admin_id}", controllers.RevokeAdmin).Methods("PATCH")
 	router.HandleFunc("/api/admin/emprestimos/ativos", controllers.ActiveLoans).Methods("GET")
 	router.HandleFunc("/api/admin/emprestimos/historico", controllers.HistoryOfLoans).Methods("GET")
+	router.HandleFunc("/api/admin/emprestimos/solicitacoes", controllers.GetOpenRequests).Methods("GET")
 
 	headersOk := handlers.AllowedHeaders([]string{
 		"X-Requested-With",
