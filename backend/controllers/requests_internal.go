@@ -44,7 +44,7 @@ func create_loan_in_db(request models.Request, w http.ResponseWriter, r *http.Re
 	if available_copies == 0 {
 		w.WriteHeader(http.StatusNotAcceptable)
 		fmt.Fprintln(w, "Não há cópias disponíveis do livro")
-		return err
+		return fmt.Errorf("")
 	}
 
 	// gets copy
@@ -75,6 +75,10 @@ func create_loan_in_db(request models.Request, w http.ResponseWriter, r *http.Re
 		fmt.Fprintln(w, "Erro criar empréstimo no banco de dados")
 		return err
 	}
+
+	// makes copy unavailable
+	copy.IsBorrowed = true
+	database.DB.Save(&copy)
 
 	return nil
 }
