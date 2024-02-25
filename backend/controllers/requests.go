@@ -123,3 +123,36 @@ func ApproveRequest(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintln(w, "Empréstimo aprovado com sucesso")
 }
+
+func DenyLoan(w http.ResponseWriter, r *http.Request) {
+	var request models.Request
+
+	status := is_admin_authenticated(w, r)
+	if status != http.StatusOK {
+		return
+	}
+
+	// get request id from url
+	request_id := mux.Vars(r)["request_id"]
+
+	// checks if request exists and is not approved
+	err := database.DB.
+		Where("id = ? AND is_accepted = ?", request_id, false).
+		First(&request).Error
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		fmt.Fprintln(w, "Erro ao encontrar solicitacao de emprestimo")
+		return
+	}
+
+	// deletes request
+	err = database.DB.Delete(&request).Error
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintln(w, "Erro ao deletar solicitação")
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintln(w, "Solicitação rejeitada com sucesso")
+}
