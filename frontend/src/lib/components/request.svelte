@@ -22,7 +22,10 @@
 
 	const handleOrder = async (order, request_id) => {
 		try {
-			let request = await api.post(`/admin/emprestimos/${order}/${request_id}`);
+			let request =
+				order == 'aprovar'
+					? await api.post(`/admin/emprestimos/${order}/${request_id}`)
+					: await api.delete(`/admin/emprestimos/${order}/${request_id}`);
 
 			if (request.status == 200) document.location.href += '/';
 		} catch (err) {
