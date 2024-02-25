@@ -1,6 +1,5 @@
 <script>
 	import Bold from './bold.svelte';
-	import Link from './link.svelte';
 
 	export let loan;
 	console.log(loan);
