@@ -66,7 +66,6 @@ type Book struct {
 	Description string  `json:"description" gorm:"type:text"`
 	Gender      string  `json:"gender" gorm:"type:varchar(30)"`
 	CopiesCount uint    `json:"copies" gorm:"default:1"`
-	Copies      []Copy
 }
 
 func (book *Book) Validate() error {

@@ -1,12 +1,16 @@
 <script>
 	import Card from '$lib/components/card.svelte';
+	import Request from '$lib/components/request.svelte';
+	export let data;
+
+	let requests = data.requests,
+		error = data.error;
 </script>
 
 <Card class="w-75">
 	<h1 class="text-center">Solicitações de empréstimo de livros</h1>
 
 	<div class="d-flex justify-content-center mt-5 px-5">
-
 		<table class="table table-striped">
 			<thead>
 				<tr>
@@ -14,37 +18,17 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
-					<td>
-						<details>
-							<summary>Livro 1 - Aluno 1</summary> 
-							<div class="d-flex justify-content-end">
-								<button 
-								type="button"
-								class="btn btn-success ms-1"
-								>Liberar
-								</button>
-							</div> 
-						</details>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<details>
-							<summary>Livro 1 - Aluno 1</summary> 
-							<div class="d-flex justify-content-end">
-								<button 
-								type="button"
-								class="btn btn-success ms-1"
-								>Liberar
-								</button>
-							</div> 
-						</details>
-					</td>
-				</tr>				
+				{#each requests as request}
+					<tr>
+						<td>
+							<Request {request} />
+						</td>
+					</tr>
+				{/each}
 			</tbody>
 		</table>
 	</div>
 </Card>
+
 <style>
 </style>
