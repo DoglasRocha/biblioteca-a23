@@ -56,7 +56,15 @@ func SearchBookById(w http.ResponseWriter, r *http.Request) {
 	// get parameters
 	id := mux.Vars(r)["id"]
 
+	// search in db
 	database.DB.First(&book, id)
+
+	// set number of available copies
+	var available_copies int64
+	database.DB.Model(&models.Copy{}).
+		Where("book_id = ? AND is_borrowed = ?", book.ID, false).
+		Count(&available_copies)
+	book.CopiesCount = uint(available_copies)
 
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(book)
