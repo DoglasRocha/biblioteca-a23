@@ -124,7 +124,7 @@ func ApproveRequest(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "Empréstimo aprovado com sucesso")
 }
 
-func DenyLoan(w http.ResponseWriter, r *http.Request) {
+func DenyRequest(w http.ResponseWriter, r *http.Request) {
 	var request models.Request
 
 	status := is_admin_authenticated(w, r)
