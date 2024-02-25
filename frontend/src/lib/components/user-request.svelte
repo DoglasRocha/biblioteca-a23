@@ -1,6 +1,5 @@
 <script>
 	import Bold from './bold.svelte';
-	import { api } from '../utils/api';
 	export let request;
 
 	const getNextSaturday = () => {
