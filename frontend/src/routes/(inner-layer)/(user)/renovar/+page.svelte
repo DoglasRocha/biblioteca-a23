@@ -7,15 +7,15 @@
 	let loan = data.loan,
 		error = data.error;
 
-	let returnDate = new Date(loan.return_date);
+	let returnDate = new Date(loan?.return_date);
 	let newReturnDate = new Date();
 	let hasRenewed = false;
 
 	newReturnDate.setDate(returnDate.getDate() + 7);
 
-	const renewLoan = (loanId) => {
+	const renewLoan = async (loanId) => {
 		try {
-			let request = api.patch(`/renovar/${loanId}`);
+			let request = await api.patch(`/renovar/${loanId}`);
 
 			if (request.status == 200) {
 				hasRenewed = true;
@@ -58,7 +58,7 @@
 			{:else}
 				<div transition:blur>
 					<p>
-						Você não pode renovar o livro <span class="fw-bold">{'João e o Pé de Feijão'}</span>,
+						Você não pode renovar o livro <span class="fw-bold">{loan.Request.Book.name}</span>,
 						você deve devolvê-lo dia
 						<span class="fw-bold">{new Date(loan.return_date).toLocaleDateString('pt-BR')}</span>.
 					</p>

@@ -5,6 +5,8 @@ import (
 	"biblioteca-a23/models"
 	"fmt"
 	"net/http"
+
+	"gorm.io/gorm"
 )
 
 func get_active_loans(w http.ResponseWriter) ([]models.Loan, error) {
@@ -146,6 +148,10 @@ func get_active_user_loan(user_id int, w http.ResponseWriter) (models.Loan, erro
 		Last(&request).Error
 
 	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			w.WriteHeader(http.StatusOK)
+			return models.Loan{}, err
+		}
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintln(w, "Erro ao buscar solicitações do usuario")
 		return models.Loan{}, err
