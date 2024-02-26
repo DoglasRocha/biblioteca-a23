@@ -41,3 +41,25 @@ func HistoryOfLoans(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(history_of_loans)
 }
+
+func GetUserLoans(w http.ResponseWriter, r *http.Request) {
+	var loans []models.Loan
+
+	status := is_reader_authenticated(w, r)
+	if status != http.StatusOK {
+		return
+	}
+
+	user_id, err := get_id_from_request_cookie(w, r)
+	if err != nil {
+		return
+	}
+
+	loans, err = get_user_loans(user_id, w)
+	if err != nil {
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(&loans)
+}

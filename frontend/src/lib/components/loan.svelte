@@ -2,9 +2,15 @@
 	import Bold from './bold.svelte';
 
 	export let loan;
+
+	let loanClass;
+
+	if (new Date() > new Date(loan.return_date)) loanClass = 'bg-danger';
+	else if (new Date() < new Date(loan.start_date)) loanClass = 'bg-info';
+	else loanClass = '';
 </script>
 
-<details>
+<details class={loanClass}>
 	<summary
 		>{loan.Request.Book.name} - {loan.Request.Reader.User.name}
 		{loan.Request.Reader.User.surname}</summary

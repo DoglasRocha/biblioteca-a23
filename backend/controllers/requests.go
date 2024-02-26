@@ -156,3 +156,39 @@ func DenyRequest(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintln(w, "Solicitação rejeitada com sucesso")
 }
+
+func GetReaderRequests(w http.ResponseWriter, r *http.Request) {
+	var requests []models.Request
+
+	status := is_reader_authenticated(w, r)
+	if status != http.StatusOK {
+		return
+	}
+
+	reader_id, err := get_id_from_request_cookie(w, r)
+	if err != nil {
+		return
+	}
+
+	err = database.DB.Where(
+		"reader_id = ? AND is_accepted = ?",
+		reader_id, false,
+	).Find(&requests).Error
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintln(w, "Erro ao buscar solicitações do usuário")
+		return
+	}
+
+	for i := range requests {
+		err = database.PopulateRequest(&requests[i], requests[i].ID)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			fmt.Fprintln(w, "Erro ao buscar solicitações do usuário")
+			return
+		}
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(&requests)
+}
