@@ -63,3 +63,25 @@ func GetUserLoans(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(&loans)
 }
+
+func GetUserActiveLoan(w http.ResponseWriter, r *http.Request) {
+	var loan models.Loan
+
+	status := is_reader_authenticated(w, r)
+	if status != http.StatusOK {
+		return
+	}
+
+	user_id, err := get_id_from_request_cookie(w, r)
+	if err != nil {
+		return
+	}
+
+	loan, err = get_active_user_loan(user_id, w)
+	if err != nil {
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(&loan)
+}
