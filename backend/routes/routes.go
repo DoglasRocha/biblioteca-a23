@@ -38,6 +38,7 @@ func SetupRoutes() {
 	router.HandleFunc("/api/admin/emprestimos/solicitacoes", controllers.GetOpenRequests).Methods("GET")
 	router.HandleFunc("/api/solicitacoes", controllers.GetReaderRequests).Methods("GET")
 	router.HandleFunc("/api/emprestimos", controllers.GetUserLoans).Methods("GET")
+	router.HandleFunc("/api/emprestimos/ativo", controllers.GetUserActiveLoan).Methods("GET")
 
 	router.HandleFunc("/api/admin/livros/editar/{id}", controllers.UpdateBook).Methods("PUT")
 	router.HandleFunc("/api/minhaconta", controllers.UpdateMyAccount).Methods("PUT")
@@ -45,6 +46,7 @@ func SetupRoutes() {
 
 	router.HandleFunc("/api/admin/autorizar/{admin_id}", controllers.AuthorizeAdmin).Methods("PATCH")
 	router.HandleFunc("/api/admin/revogar/{admin_id}", controllers.RevokeAdmin).Methods("PATCH")
+	router.HandleFunc("/api/renovar/{loan_id}", controllers.RenewLoan).Methods("PATCH")
 
 	headersOk := handlers.AllowedHeaders([]string{
 		"X-Requested-With",

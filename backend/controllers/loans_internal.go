@@ -5,6 +5,8 @@ import (
 	"biblioteca-a23/models"
 	"fmt"
 	"net/http"
+
+	"gorm.io/gorm"
 )
 
 func get_active_loans(w http.ResponseWriter) ([]models.Loan, error) {
@@ -131,4 +133,48 @@ func get_user_loans(user_id int, w http.ResponseWriter) ([]models.Loan, error) {
 	}
 
 	return loans, nil
+}
+
+func get_active_user_loan(user_id int, w http.ResponseWriter) (models.Loan, error) {
+	var loan models.Loan
+
+	var request models.Request
+	// get last accepted loan, because there is only one active loan per user
+	err := database.DB.Model(&models.Request{}).
+		Select("id").
+		Where(
+			"reader_id = ? AND is_accepted = ?", user_id, true,
+		).
+		Last(&request).Error
+
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			w.WriteHeader(http.StatusOK)
+			return models.Loan{}, err
+		}
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintln(w, "Erro ao buscar solicitações do usuario")
+		return models.Loan{}, err
+	}
+
+	// get active loan from user
+	err = database.DB.
+		Where("request_id = ? AND has_returned = ?", request.ID, false).
+		First(&loan).Error
+
+	if err != nil {
+		w.WriteHeader(http.StatusNotAcceptable)
+		fmt.Fprintln(w, "Erro ao buscar empréstimo ativo do usuario")
+		return models.Loan{}, err
+	}
+
+	// populate loan
+	err = database.PopulateLoan(&loan, loan.ID)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintln(w, "Erro buscar empréstimo ", loan.ID, " na base de dados")
+		return models.Loan{}, err
+	}
+
+	return loan, nil
 }

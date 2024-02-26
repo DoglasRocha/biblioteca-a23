@@ -3,9 +3,14 @@ package controllers
 import (
 	//"biblioteca-a23/models"
 
+	"biblioteca-a23/database"
 	"biblioteca-a23/models"
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"time"
+
+	"github.com/gorilla/mux"
 )
 
 func ActiveLoans(w http.ResponseWriter, r *http.Request) {
@@ -62,4 +67,67 @@ func GetUserLoans(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(&loans)
+}
+
+func GetUserActiveLoan(w http.ResponseWriter, r *http.Request) {
+	var loan models.Loan
+
+	status := is_reader_authenticated(w, r)
+	if status != http.StatusOK {
+		return
+	}
+
+	user_id, err := get_id_from_request_cookie(w, r)
+	if err != nil {
+		return
+	}
+
+	loan, err = get_active_user_loan(user_id, w)
+	if err != nil {
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(&loan)
+}
+
+func RenewLoan(w http.ResponseWriter, r *http.Request) {
+	var loan models.Loan
+
+	status := is_reader_authenticated(w, r)
+	if status != http.StatusOK {
+		return
+	}
+
+	// get loan id
+	loan_id := mux.Vars(r)["loan_id"]
+
+	// get loan in DB
+	err := database.DB.First(&loan, loan_id).Error
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintln(w, "Não existe empréstimo com esse identificador!")
+		return
+	}
+
+	// renew loan
+	loan.HasRenewed = true
+	loan.ReturnDate = loan.ReturnDate.Add(7 * 24 * time.Hour)
+
+	err = database.DB.Save(&loan).Error
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintln(w, "Erro ao renovar empréstimo")
+		return
+	}
+
+	err = database.PopulateLoan(&loan, loan.ID)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintln(w, "Erro ao buscar dados do empréstimo")
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(&loan)
 }
