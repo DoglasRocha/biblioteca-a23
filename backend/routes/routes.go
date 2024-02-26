@@ -37,6 +37,7 @@ func SetupRoutes() {
 	router.HandleFunc("/api/admin/emprestimos/historico", controllers.HistoryOfLoans).Methods("GET")
 	router.HandleFunc("/api/admin/emprestimos/solicitacoes", controllers.GetOpenRequests).Methods("GET")
 	router.HandleFunc("/api/solicitacoes", controllers.GetReaderRequests).Methods("GET")
+	router.HandleFunc("/api/emprestimos", controllers.GetUserLoans).Methods("GET")
 
 	router.HandleFunc("/api/admin/livros/editar/{id}", controllers.UpdateBook).Methods("PUT")
 	router.HandleFunc("/api/minhaconta", controllers.UpdateMyAccount).Methods("PUT")

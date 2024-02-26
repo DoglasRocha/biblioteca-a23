@@ -90,3 +90,45 @@ func has_active_loan(user_id int, w http.ResponseWriter) bool {
 
 	return false
 }
+
+func get_user_loans(user_id int, w http.ResponseWriter) ([]models.Loan, error) {
+	var loans []models.Loan
+
+	var requests []uint
+	// request ids from user
+	err := database.DB.Model(&models.Request{}).
+		Select("id").
+		Where(
+			"reader_id = ? AND is_accepted = ?", user_id, true,
+		).
+		Scan(&requests).Error
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintln(w, "Erro ao buscar solicitações do usuario")
+		return []models.Loan{}, err
+	}
+
+	// get all loans from user
+	err = database.DB.
+		Where("request_id IN ?", requests).
+		Find(&loans).Error
+
+	if err != nil {
+		w.WriteHeader(http.StatusNotAcceptable)
+		fmt.Fprintln(w, "Erro ao buscar empréstimos ativos do usuario")
+		return []models.Loan{}, err
+	}
+
+	// populate loans
+	for i := range loans {
+		err = database.PopulateLoan(&loans[i], loans[i].ID)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			fmt.Fprintln(w, "Erro buscar empréstimo ", loans[i].ID, " na base de dados")
+			return []models.Loan{}, err
+		}
+	}
+
+	return loans, nil
+}
