@@ -39,7 +39,7 @@ func SetupRoutes() {
 	router.HandleFunc("/api/solicitacoes", controllers.GetReaderRequests).Methods("GET")
 	router.HandleFunc("/api/emprestimos", controllers.GetUserLoans).Methods("GET")
 	router.HandleFunc("/api/emprestimos/ativo", controllers.GetUserActiveLoan).Methods("GET")
-	router.HandleFunc("/api/admin/usuario/{user_id}", controllers.GetReaderData).Methods("GET")
+	router.HandleFunc("/api/admin/leitor/{user_id}", controllers.GetReaderData).Methods("GET")
 
 	router.HandleFunc("/api/admin/livros/editar/{id}", controllers.UpdateBook).Methods("PUT")
 	router.HandleFunc("/api/minhaconta", controllers.UpdateMyAccount).Methods("PUT")

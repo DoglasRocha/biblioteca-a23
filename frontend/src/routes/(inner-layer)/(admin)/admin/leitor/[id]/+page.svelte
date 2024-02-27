@@ -6,6 +6,8 @@
 
 	let readerData = data.readerData,
 		error = data.error;
+
+	console.log(readerData);
 </script>
 
 <Card class="w-75">
@@ -14,18 +16,24 @@
 		<ul>
 			<li>
 				<Bold>Nome:</Bold>
+				{readerData.User.name}
+				{readerData.User.surname}
 			</li>
 			<li>
 				<Bold>Email:</Bold>
+				<a href={`mailto:${readerData.User.email}`}>{readerData.User.email}</a>
 			</li>
 			<li>
 				<Bold>Data de nascimento:</Bold>
+				{new Date(readerData.birthday).toLocaleDateString('pt-br')}
 			</li>
 			<li>
 				<Bold>Endereço:</Bold>
+				{readerData.address}
 			</li>
 			<li>
 				<Bold>Número de telefone:</Bold>
+				{readerData.phone_number}
 			</li>
 		</ul>
 	{:else}
