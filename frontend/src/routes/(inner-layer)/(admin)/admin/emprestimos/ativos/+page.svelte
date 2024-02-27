@@ -1,11 +1,21 @@
 <script>
 	import Card from '$lib/components/card.svelte';
-	import Bold from '$lib/components/bold.svelte';
 	import Loan from '$lib/components/loan.svelte';
+	import { api } from '$lib/utils/api.js';
 	export let data;
 
 	let loans = data.loans,
 		error = data.error;
+
+	const handleReturn = async (loanId) => {
+		try {
+			let request = await api.patch(`/admin/emprestimos/devolver/${loanId}`);
+
+			if (request.status == 200) document.location.href += '/';
+		} catch (err) {
+			error = err.response.data;
+		}
+	};
 </script>
 
 <Card class="w-75">
@@ -22,7 +32,9 @@
 							<td>
 								<Loan {loan}>
 									<div class="d-flex justify-content-end">
-										<button class="btn btn-primary">Confirmar devolução</button>
+										<button class="btn btn-primary" on:click={() => handleReturn(loan.id)}>
+											Confirmar devolução
+										</button>
 									</div>
 								</Loan>
 							</td>

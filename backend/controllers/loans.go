@@ -131,3 +131,50 @@ func RenewLoan(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(&loan)
 }
+
+func ReturnLoan(w http.ResponseWriter, r *http.Request) {
+	var loan models.Loan
+
+	status := is_admin_authenticated(w, r)
+	if status != http.StatusOK {
+		return
+	}
+
+	// get loan
+	loan_id := mux.Vars(r)["loan_id"]
+	err := database.DB.First(&loan, loan_id).Error
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		fmt.Fprintln(w, "Erro ao buscar empréstimo")
+		return
+	}
+
+	err = database.PopulateLoan(&loan, loan.ID)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		fmt.Fprintln(w, "Erro ao buscar dados do empréstimo")
+		return
+	}
+
+	// mark as returned
+	loan.HasReturned = true
+	loan.Copy.IsBorrowed = false
+
+	// save in db
+	err = database.DB.Save(&loan.Copy).Error
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintln(w, "Erro ao salvar devolucação no banco de dados")
+		return
+	}
+
+	err = database.DB.Save(&loan).Error
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintln(w, "Erro ao salvar devolucação no banco de dados")
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintln(w, "Empréstimo devolvido com sucesso")
+}
