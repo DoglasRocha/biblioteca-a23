@@ -78,6 +78,10 @@ func search_available_books_by_name(query_params url.Values) (int, []models.Book
 		Where("is_borrowed = ?", false).
 		Scan(&available_copies_ids).Error
 	if err != nil {
+		slog.Warn(
+			"Erro ao pesquisar livros disponíveis",
+			"err", err,
+		)
 		return http.StatusNotFound, books
 	}
 
@@ -92,6 +96,11 @@ func search_available_books_by_name(query_params url.Values) (int, []models.Book
 		Limit(50).
 		Find(&books).Error
 	if err != nil {
+		slog.Warn(
+			"Erro ao pesquisar livros disponíveis com nome",
+			"err", err,
+			"book_name", book_name,
+		)
 		return http.StatusNotFound, books
 	}
 
