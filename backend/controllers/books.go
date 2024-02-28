@@ -5,6 +5,7 @@ import (
 	"biblioteca-a23/models"
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -114,6 +115,10 @@ func UpdateBook(w http.ResponseWriter, r *http.Request) {
 	// json from request
 	err := json.NewDecoder(r.Body).Decode(&book_fields_to_update)
 	if err != nil {
+		slog.Warn(
+			"Erro ao decodificar corpo da request",
+			"err", err,
+		)
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintln(w, "Erro ao processar requisição")
 		return
@@ -123,6 +128,11 @@ func UpdateBook(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 	err = database.DB.First(&not_updated_book, id).Error
 	if err != nil {
+		slog.Warn(
+			"Erro ao buscar livro a ser atualizado",
+			"err", err,
+			"id", id,
+		)
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintln(w, "Não há livro com esse identificador")
 		return
@@ -134,6 +144,11 @@ func UpdateBook(w http.ResponseWriter, r *http.Request) {
 	if copies_diff > 0 {
 		err = create_copies(copies_diff, book_id)
 		if err != nil {
+			slog.Warn(
+				"Erro ao criar cópias do livro",
+				"err", err,
+				"book_id", book_id,
+			)
 			w.WriteHeader(http.StatusInternalServerError)
 			fmt.Fprintln(w, "Erro ao criar cópias do livro")
 			return
@@ -141,6 +156,11 @@ func UpdateBook(w http.ResponseWriter, r *http.Request) {
 	} else if copies_diff < 0 {
 		err = delete_copies(-copies_diff, book_id)
 		if err != nil {
+			slog.Warn(
+				"Erro ao deletar cópias do livro",
+				"err", err,
+				"book_id", book_id,
+			)
 			w.WriteHeader(http.StatusInternalServerError)
 			fmt.Fprintln(w, "Erro ao deletar cópias do livro")
 			return
@@ -158,11 +178,20 @@ func UpdateBook(w http.ResponseWriter, r *http.Request) {
 	// updates the book
 	err = database.DB.Save(&book_fields_to_update).Error
 	if err != nil {
+		slog.Warn(
+			"Erro ao atualizar livro na base de dados",
+			"err", err,
+			"book_id", book_id,
+		)
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintln(w, "Erro ao atualizar livro")
 		return
 	}
 
+	slog.Info(
+		"Livro atualizado",
+		"book_id", book_id,
+	)
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintln(w, "Livro atualizado com sucesso")
 }

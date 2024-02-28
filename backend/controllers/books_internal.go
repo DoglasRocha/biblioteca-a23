@@ -51,6 +51,12 @@ func register_book(request *http.Request) error {
 		return err
 	}
 
+	slog.Info(
+		"Novo livro cadastrado",
+		"book_id", book.ID,
+		"copy_id", copy.ID,
+	)
+
 	return nil
 }
 
