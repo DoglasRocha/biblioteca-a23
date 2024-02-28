@@ -199,7 +199,7 @@ func parse_cookie(cookie *http.Cookie) (int, error) {
 		"Erro ao encontrar map do cookie",
 	)
 
-	return -1, fmt.Errorf("Erro ao encontrar map do cookie")
+	return -1, fmt.Errorf("erro ao encontrar map do cookie")
 }
 
 func get_id_from_request_cookie(w http.ResponseWriter, r *http.Request) (int, error) {
