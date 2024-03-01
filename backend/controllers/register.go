@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"log/slog"
 
 	"io"
 	"net/http"
@@ -12,6 +13,10 @@ import (
 func RegisterReader(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
+		slog.Warn(
+			"Erro ao ler corpo da requisição",
+			"err", err,
+		)
 		http.Error(w, "Erro ao ler requisição", http.StatusBadRequest)
 		return
 	}
@@ -35,6 +40,10 @@ func RegisterReader(w http.ResponseWriter, r *http.Request) {
 func RegisterAdmin(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
+		slog.Warn(
+			"Erro ao ler corpo da requisição",
+			"err", err,
+		)
 		http.Error(w, "Erro ao ler requisição", http.StatusBadRequest)
 		return
 	}
