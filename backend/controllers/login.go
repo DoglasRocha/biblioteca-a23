@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log/slog"
 	"net/http"
 
 	"golang.org/x/crypto/bcrypt"
@@ -15,6 +16,10 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	var user models.User
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
+		slog.Warn(
+			"Erro ao ler corpo da requisição",
+			"err", err,
+		)
 		http.Error(w, "Erro ao ler requisição", http.StatusBadRequest)
 		return
 	}
@@ -43,7 +48,10 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	// generates jwt
 	token, err := sign_jwt(user)
 	if err != nil {
-		fmt.Println(err)
+		slog.Warn(
+			"Erro ao gerar jwt",
+			"err", err,
+		)
 		http.Error(
 			w,
 			"Erro ao assinar token de acesso. Tente novamente mais tarde.",
