@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"biblioteca-a23/controllers"
 	"log"
 	"net/http"
 
@@ -14,41 +13,12 @@ import (
 
 func SetupRoutes() {
 	router := mux.NewRouter()
-	router.HandleFunc("/api/cadastro", controllers.RegisterReader).Methods("POST")
-	router.HandleFunc("/api/admin/cadastro", controllers.RegisterAdmin).Methods("POST")
-	router.HandleFunc("/api/login", controllers.Login).Methods("POST")
-	router.HandleFunc("/api/admin/login", controllers.Login).Methods("POST")
-	router.HandleFunc("/api/check", controllers.CheckReader).Methods("POST")
-	router.HandleFunc("/api/admin/check", controllers.CheckAdmin).Methods("POST")
-	router.HandleFunc("/api/admin/livros/cadastrar", controllers.RegisterBook).Methods("POST")
-	router.HandleFunc("/api/emprestar/{book_id}", controllers.CreateRequest).Methods("POST")
-	router.HandleFunc("/api/admin/emprestimos/aprovar/{request_id}", controllers.ApproveRequest).Methods("POST")
 
-	router.HandleFunc("/api/admin/emprestimos/rejeitar/{request_id}", controllers.DenyRequest).Methods("DELETE")
-
-	router.HandleFunc("/api/livros/buscar", controllers.SearchBooksByName).Methods("GET")
-	router.HandleFunc("/api/livros/buscar/{id}", controllers.SearchBookById).Methods("GET")
-	router.HandleFunc("/api/admin/livros/buscar", controllers.SearchBooksByNameAdmin).Methods("GET")
-	router.HandleFunc("/api/admin/livros/buscar/{id}", controllers.SearchBookByIdAdmin).Methods("GET")
-	router.HandleFunc("/api/minhaconta", controllers.GetMyAccount).Methods("GET")
-	router.HandleFunc("/api/admin/minhaconta", controllers.GetMyAccountAdmin).Methods("GET")
-	router.HandleFunc("/api/admin/admins", controllers.ListAdmins).Methods("GET")
-	router.HandleFunc("/api/admin/emprestimos/ativos", controllers.ActiveLoans).Methods("GET")
-	router.HandleFunc("/api/admin/emprestimos/historico", controllers.HistoryOfLoans).Methods("GET")
-	router.HandleFunc("/api/admin/emprestimos/solicitacoes", controllers.GetOpenRequests).Methods("GET")
-	router.HandleFunc("/api/solicitacoes", controllers.GetReaderRequests).Methods("GET")
-	router.HandleFunc("/api/emprestimos", controllers.GetUserLoans).Methods("GET")
-	router.HandleFunc("/api/emprestimos/ativo", controllers.GetUserActiveLoan).Methods("GET")
-	router.HandleFunc("/api/admin/leitor/{user_id}", controllers.GetReaderData).Methods("GET")
-
-	router.HandleFunc("/api/admin/livros/editar/{id}", controllers.UpdateBook).Methods("PUT")
-	router.HandleFunc("/api/minhaconta", controllers.UpdateMyAccount).Methods("PUT")
-	router.HandleFunc("/api/admin/minhaconta", controllers.UpdateMyAccountAdmin).Methods("PUT")
-
-	router.HandleFunc("/api/admin/autorizar/{admin_id}", controllers.AuthorizeAdmin).Methods("PATCH")
-	router.HandleFunc("/api/admin/revogar/{admin_id}", controllers.RevokeAdmin).Methods("PATCH")
-	router.HandleFunc("/api/renovar/{loan_id}", controllers.RenewLoan).Methods("PATCH")
-	router.HandleFunc("/api/admin/emprestimos/devolver/{loan_id}", controllers.ReturnLoan).Methods("PATCH")
+	SetupPostRoutes(router)
+	SetupDeleteRoutes(router)
+	SetupGetRoutes(router)
+	SetupPutRoutes(router)
+	SetupPatchRoutes(router)
 
 	headersOk := handlers.AllowedHeaders([]string{
 		"X-Requested-With",

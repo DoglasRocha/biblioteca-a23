@@ -5,6 +5,7 @@ import (
 	"biblioteca-a23/models"
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"net/http"
 
 	"golang.org/x/crypto/bcrypt"
@@ -25,6 +26,11 @@ func GetMyAccount(w http.ResponseWriter, r *http.Request) {
 
 	err = database.DB.Where("user_id = ?", id).First(&reader).Error
 	if err != nil {
+		slog.Warn(
+			"Erro ao encontrar struct reader",
+			"err", err,
+			"user_id", id,
+		)
 		w.WriteHeader(http.StatusNotFound)
 		fmt.Fprintln(w, "Erro ao localizar usuário leitor na base de dados")
 		return
@@ -32,6 +38,11 @@ func GetMyAccount(w http.ResponseWriter, r *http.Request) {
 
 	err = database.DB.First(&reader.User, id).Error
 	if err != nil {
+		slog.Warn(
+			"Erro ao encontrar struct reader.User",
+			"err", err,
+			"user_id", id,
+		)
 		w.WriteHeader(http.StatusNotFound)
 		fmt.Fprintln(w, "Erro ao localizar usuário leitor na base de dados")
 		return
@@ -59,6 +70,11 @@ func GetMyAccountAdmin(w http.ResponseWriter, r *http.Request) {
 
 	err = database.DB.Where("user_id = ?", id).First(&admin).Error
 	if err != nil {
+		slog.Warn(
+			"Erro ao encontrar struct admin",
+			"err", err,
+			"user_id", id,
+		)
 		w.WriteHeader(http.StatusNotFound)
 		fmt.Fprintln(w, "Erro ao localizar usuário leitor na base de dados")
 		return
@@ -66,6 +82,11 @@ func GetMyAccountAdmin(w http.ResponseWriter, r *http.Request) {
 
 	err = database.DB.First(&admin.User, id).Error
 	if err != nil {
+		slog.Warn(
+			"Erro ao encontrar struct admin.User",
+			"err", err,
+			"user_id", id,
+		)
 		w.WriteHeader(http.StatusNotFound)
 		fmt.Fprintln(w, "Erro ao localizar usuário leitor na base de dados")
 		return
@@ -123,13 +144,17 @@ func UpdateMyAccount(w http.ResponseWriter, r *http.Request) {
 
 	// updates password
 	if new_password.NewPassword != "" {
-		if err = update_password(w, r, new_password, updated_reader_data.User); err != nil {
+		if err = update_password(w, new_password, updated_reader_data.User); err != nil {
 			return
 		}
 	}
 
 	if err = updated_reader_data.Validate(); err != nil {
-		fmt.Println(err)
+		slog.Warn(
+			"Erro ao validar dados atualizados de usuario reader",
+			"err", err,
+			"user_id", id,
+		)
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Fprintln(w, "Erro ao validar dados de usuário")
 		return
@@ -194,12 +219,17 @@ func UpdateMyAccountAdmin(w http.ResponseWriter, r *http.Request) {
 
 	// updates password
 	if new_password.NewPassword != "" {
-		if err = update_password(w, r, new_password, updated_admin_data.User); err != nil {
+		if err = update_password(w, new_password, updated_admin_data.User); err != nil {
 			return
 		}
 	}
 
 	if err = updated_admin_data.Validate(); err != nil {
+		slog.Warn(
+			"Erro ao validar dados atualizados de usuario admin",
+			"err", err,
+			"user_id", id,
+		)
 		fmt.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Fprintln(w, "Erro ao validar dados de usuário")

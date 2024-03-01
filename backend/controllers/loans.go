@@ -7,6 +7,7 @@ import (
 	"biblioteca-a23/models"
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"time"
 
@@ -105,6 +106,11 @@ func RenewLoan(w http.ResponseWriter, r *http.Request) {
 	// get loan in DB
 	err := database.DB.First(&loan, loan_id).Error
 	if err != nil {
+		slog.Warn(
+			"Erro ao buscar empréstimo na base de dados",
+			"err", err,
+			"loan_id", loan_id,
+		)
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Fprintln(w, "Não existe empréstimo com esse identificador!")
 		return
@@ -116,6 +122,11 @@ func RenewLoan(w http.ResponseWriter, r *http.Request) {
 
 	err = database.DB.Save(&loan).Error
 	if err != nil {
+		slog.Warn(
+			"Erro ao atualizar empréstimo na base de dados",
+			"err", err,
+			"loan_id", loan_id,
+		)
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintln(w, "Erro ao renovar empréstimo")
 		return
@@ -123,6 +134,11 @@ func RenewLoan(w http.ResponseWriter, r *http.Request) {
 
 	err = database.PopulateLoan(&loan, loan.ID)
 	if err != nil {
+		slog.Warn(
+			"Erro ao popular empréstimo na base de dados",
+			"err", err,
+			"loan_id", loan_id,
+		)
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintln(w, "Erro ao buscar dados do empréstimo")
 		return
@@ -144,6 +160,11 @@ func ReturnLoan(w http.ResponseWriter, r *http.Request) {
 	loan_id := mux.Vars(r)["loan_id"]
 	err := database.DB.First(&loan, loan_id).Error
 	if err != nil {
+		slog.Warn(
+			"Erro ao buscar empréstimo na base de dados",
+			"err", err,
+			"loan_id", loan_id,
+		)
 		w.WriteHeader(http.StatusNotFound)
 		fmt.Fprintln(w, "Erro ao buscar empréstimo")
 		return
@@ -151,6 +172,11 @@ func ReturnLoan(w http.ResponseWriter, r *http.Request) {
 
 	err = database.PopulateLoan(&loan, loan.ID)
 	if err != nil {
+		slog.Warn(
+			"Erro ao popular empréstimo na base de dados",
+			"err", err,
+			"loan_id", loan_id,
+		)
 		w.WriteHeader(http.StatusNotFound)
 		fmt.Fprintln(w, "Erro ao buscar dados do empréstimo")
 		return
@@ -163,6 +189,11 @@ func ReturnLoan(w http.ResponseWriter, r *http.Request) {
 	// save in db
 	err = database.DB.Save(&loan.Copy).Error
 	if err != nil {
+		slog.Warn(
+			"Erro ao atualizar cópia do empréstimo na base de dados",
+			"err", err,
+			"loan_id", loan_id,
+		)
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintln(w, "Erro ao salvar devolucação no banco de dados")
 		return
@@ -170,6 +201,11 @@ func ReturnLoan(w http.ResponseWriter, r *http.Request) {
 
 	err = database.DB.Save(&loan).Error
 	if err != nil {
+		slog.Warn(
+			"Erro ao atualizar empréstimo na base de dados",
+			"err", err,
+			"loan_id", loan_id,
+		)
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintln(w, "Erro ao salvar devolucação no banco de dados")
 		return

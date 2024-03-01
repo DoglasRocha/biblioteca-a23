@@ -5,6 +5,7 @@ import (
 	"biblioteca-a23/models"
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"os"
 	"time"
@@ -48,18 +49,30 @@ func user_exists_and_passwords_match(request_body []byte) (models.User, error) {
 	// unpacks the json body to the login_struct
 	err := json.Unmarshal(request_body, &login)
 	if err != nil {
+		slog.Warn(
+			"Erro preencher struct login",
+			"err", err,
+		)
 		return models.User{}, err
 	}
 
 	// checks if email exists in DB
 	err = database.DB.Where("email = ?", login.Email).First(&user).Error
 	if err != nil {
+		slog.Warn(
+			"Erro checar se email existe na base de dados",
+			"err", err,
+		)
 		return models.User{}, err
 	}
 
 	// checks if passwords match
 	err = bcrypt.CompareHashAndPassword([]byte(*user.Password), []byte(login.Password))
 	if err != nil {
+		slog.Warn(
+			"Erro ao checar se senhas batem",
+			"err", err,
+		)
 		return models.User{}, err
 	}
 
@@ -72,12 +85,20 @@ func create_user(request_body []byte) (models.User, error) {
 	// unpacks the json from body to user struct
 	err := json.Unmarshal(request_body, &user)
 	if err != nil {
+		slog.Warn(
+			"Erro ao preencher struct de usuario",
+			"err", err,
+		)
 		return models.User{}, err
 	}
 
 	// validates the user fields
 	err = user.Validate()
 	if err != nil {
+		slog.Warn(
+			"Erro ao validar dados de usuario",
+			"err", err,
+		)
 		return models.User{}, err
 	}
 
@@ -85,6 +106,10 @@ func create_user(request_body []byte) (models.User, error) {
 	var password_hash []byte
 	password_hash, err = bcrypt.GenerateFromPassword([]byte(*user.Password), bcrypt.MinCost)
 	if err != nil {
+		slog.Warn(
+			"Erro ao criar hash de senha",
+			"err", err,
+		)
 		return models.User{}, err
 	}
 	*user.Password = string(password_hash)
@@ -92,14 +117,23 @@ func create_user(request_body []byte) (models.User, error) {
 	// creates the user in DB
 	err = database.DB.Create(&user).Error
 	if err != nil {
+		slog.Warn(
+			"Erro ao inserir usuario na base de dados",
+			"err", err,
+		)
 		return models.User{}, err
 	}
+
 	return user, nil
 }
 
 func is_reader_authenticated(w http.ResponseWriter, r *http.Request) int {
 	cookie, err := r.Cookie("accessToken")
 	if err != nil {
+		slog.Warn(
+			"Erro ao acessar cookie",
+			"err", err,
+		)
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Fprintln(w, "Erro ao acessar cookie")
 		return http.StatusInternalServerError
@@ -117,12 +151,20 @@ func is_reader_authenticated(w http.ResponseWriter, r *http.Request) int {
 func is_admin_authenticated(w http.ResponseWriter, r *http.Request) int {
 	cookie, err := r.Cookie("accessToken")
 	if err != nil {
+		slog.Warn(
+			"Erro ao acessar cookie",
+			"err", err,
+		)
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Fprintln(w, "Erro ao acessar cookie")
 		return http.StatusInternalServerError
 	}
 	status, message, _ := check_admin(cookie)
 	if status != http.StatusOK {
+		slog.Warn(
+			message,
+			"status", status,
+		)
 		w.WriteHeader(status)
 		fmt.Fprintln(w, message)
 		return status
@@ -141,8 +183,11 @@ func parse_cookie(cookie *http.Cookie) (int, error) {
 
 		return []byte(os.Getenv("SIGNING_KEY")), nil
 	})
-
 	if err != nil {
+		slog.Warn(
+			"Erro ao parsear cookie",
+			"err", err,
+		)
 		return -1, err
 	}
 
@@ -150,12 +195,20 @@ func parse_cookie(cookie *http.Cookie) (int, error) {
 		id := claims["id"]
 		return int(id.(float64)), nil
 	}
-	return -1, err
+	slog.Warn(
+		"Erro ao encontrar map do cookie",
+	)
+
+	return -1, fmt.Errorf("erro ao encontrar map do cookie")
 }
 
 func get_id_from_request_cookie(w http.ResponseWriter, r *http.Request) (int, error) {
 	cookie, err := r.Cookie("accessToken")
 	if err != nil {
+		slog.Warn(
+			"Erro ao acessar cookie",
+			"err", err,
+		)
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintln(w, "Erro ao ler cookie")
 		return -1, err
