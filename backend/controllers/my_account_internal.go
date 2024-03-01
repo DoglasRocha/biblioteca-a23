@@ -97,7 +97,7 @@ func find_reader_by_id(id int) (models.Reader, error) {
 	return reader, nil
 }
 
-func update_password(w http.ResponseWriter, r *http.Request, new_password newPassword, user models.User) error {
+func update_password(w http.ResponseWriter, new_password newPassword, user models.User) error {
 	err := new_password.Validate()
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)

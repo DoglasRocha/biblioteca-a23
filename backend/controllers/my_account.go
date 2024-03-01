@@ -123,13 +123,12 @@ func UpdateMyAccount(w http.ResponseWriter, r *http.Request) {
 
 	// updates password
 	if new_password.NewPassword != "" {
-		if err = update_password(w, r, new_password, updated_reader_data.User); err != nil {
+		if err = update_password(w, new_password, updated_reader_data.User); err != nil {
 			return
 		}
 	}
 
 	if err = updated_reader_data.Validate(); err != nil {
-		fmt.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Fprintln(w, "Erro ao validar dados de usuário")
 		return
@@ -194,7 +193,7 @@ func UpdateMyAccountAdmin(w http.ResponseWriter, r *http.Request) {
 
 	// updates password
 	if new_password.NewPassword != "" {
-		if err = update_password(w, r, new_password, updated_admin_data.User); err != nil {
+		if err = update_password(w, new_password, updated_admin_data.User); err != nil {
 			return
 		}
 	}
