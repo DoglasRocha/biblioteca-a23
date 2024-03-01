@@ -4,6 +4,7 @@ import (
 	"biblioteca-a23/database"
 	"biblioteca-a23/models"
 	"encoding/json"
+	"log/slog"
 )
 
 func create_reader(request_body []byte) error {
@@ -19,6 +20,10 @@ func create_reader(request_body []byte) error {
 	// unpacks the json body to the reader struct
 	err = json.Unmarshal(request_body, &reader)
 	if err != nil {
+		slog.Warn(
+			"Erro ao preencher struct reader",
+			"err", err,
+		)
 		database.DB.Delete(&user)
 		return err
 	}
@@ -29,6 +34,10 @@ func create_reader(request_body []byte) error {
 	// validates the reader fields
 	err = reader.Validate()
 	if err != nil {
+		slog.Warn(
+			"Erro ao validar struct reader",
+			"err", err,
+		)
 		database.DB.Delete(&user)
 		return err
 	}
@@ -36,6 +45,10 @@ func create_reader(request_body []byte) error {
 	// creates the reader in DB
 	err = database.DB.Create(&reader).Error
 	if err != nil {
+		slog.Warn(
+			"Erro ao criar struct reader no banco de dados",
+			"err", err,
+		)
 		database.DB.Delete(&user)
 		return err
 	}
@@ -60,12 +73,20 @@ func create_admin(request_body []byte) error {
 	// validates the admin struct
 	err = admin.Validate()
 	if err != nil {
+		slog.Warn(
+			"Erro ao validar struct admin",
+			"err", err,
+		)
 		return err
 	}
 
 	// creates the admin in DB
 	err = database.DB.Create(&admin).Error
 	if err != nil {
+		slog.Warn(
+			"Erro ao criar struct admin no banco de dados",
+			"err", err,
+		)
 		database.DB.Delete(&user)
 		return err
 	}

@@ -4,6 +4,7 @@ import (
 	"biblioteca-a23/database"
 	"biblioteca-a23/models"
 	"encoding/json"
+	"log/slog"
 	"net/http"
 	"net/url"
 )
@@ -14,24 +15,47 @@ func register_book(request *http.Request) error {
 
 	err := json.NewDecoder(request.Body).Decode(&book)
 	if err != nil {
+		slog.Warn(
+			"Erro ao decodificar corpo da request",
+			"err", err,
+		)
 		return err
 	}
 
 	err = book.Validate()
 	if err != nil {
+		slog.Warn(
+			"Erro ao validar livro",
+			"err", err,
+		)
 		return err
 	}
 
 	err = database.DB.Create(&book).Error
 	if err != nil {
+		slog.Warn(
+			"Erro ao criar livro na base de dados",
+			"err", err,
+		)
 		return err
 	}
 
 	copy.BookID = book.ID
 	err = database.DB.Create(&copy).Error
 	if err != nil {
+		slog.Warn(
+			"Erro ao criar cópia do livro na base de dados",
+			"err", err,
+			"id", book.ID,
+		)
 		return err
 	}
+
+	slog.Info(
+		"Novo livro cadastrado",
+		"book_id", book.ID,
+		"copy_id", copy.ID,
+	)
 
 	return nil
 }
@@ -60,6 +84,10 @@ func search_available_books_by_name(query_params url.Values) (int, []models.Book
 		Where("is_borrowed = ?", false).
 		Scan(&available_copies_ids).Error
 	if err != nil {
+		slog.Warn(
+			"Erro ao pesquisar livros disponíveis",
+			"err", err,
+		)
 		return http.StatusNotFound, books
 	}
 
@@ -74,6 +102,11 @@ func search_available_books_by_name(query_params url.Values) (int, []models.Book
 		Limit(50).
 		Find(&books).Error
 	if err != nil {
+		slog.Warn(
+			"Erro ao pesquisar livros disponíveis com nome",
+			"err", err,
+			"book_name", book_name,
+		)
 		return http.StatusNotFound, books
 	}
 

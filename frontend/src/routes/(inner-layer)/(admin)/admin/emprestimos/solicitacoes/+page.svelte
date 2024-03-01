@@ -18,13 +18,19 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each requests as request}
+				{#if requests.length}
+					{#each requests as request}
+						<tr>
+							<td>
+								<Request {request} />
+							</td>
+						</tr>
+					{/each}
+				{:else}
 					<tr>
-						<td>
-							<Request {request} />
-						</td>
+						<td>Não há solicitações em aberto!</td>
 					</tr>
-				{/each}
+				{/if}
 			</tbody>
 		</table>
 	</div>

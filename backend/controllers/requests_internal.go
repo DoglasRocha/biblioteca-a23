@@ -4,6 +4,7 @@ import (
 	"biblioteca-a23/database"
 	"biblioteca-a23/models"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"time"
 )
@@ -19,6 +20,11 @@ func get_open_requests() ([]models.Request, error) {
 	for i := range requests {
 		err = database.PopulateRequest(&requests[i], requests[i].ID)
 		if err != nil {
+			slog.Warn(
+				"Erro ao popular solicitação",
+				"err", err,
+				"request_id", requests[i].ID,
+			)
 			return []models.Request{}, err
 		}
 	}
@@ -36,6 +42,11 @@ func create_loan_in_db(request models.Request, w http.ResponseWriter) error {
 	)
 	err := query.Count(&available_copies).Error
 	if err != nil {
+		slog.Warn(
+			"Erro ao contar cópias do livro",
+			"err", err,
+			"book_id", request.BookID,
+		)
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintln(w, "Erro ao contar cópias disponíveis do livro")
 		return err
@@ -63,7 +74,11 @@ func create_loan_in_db(request models.Request, w http.ResponseWriter) error {
 	// validates loan
 	err = loan.Validate()
 	if err != nil {
-		fmt.Println(err)
+		slog.Warn(
+			"Erro ao validar empréstimo",
+			"err", err,
+			"book_id", request.BookID,
+		)
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintln(w, "Erro ao validar empréstimo")
 		return err
@@ -71,6 +86,11 @@ func create_loan_in_db(request models.Request, w http.ResponseWriter) error {
 
 	err = database.DB.Create(&loan).Error
 	if err != nil {
+		slog.Warn(
+			"Erro ao criar empréstimo na base de dados",
+			"err", err,
+			"book_id", request.BookID,
+		)
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintln(w, "Erro criar empréstimo no banco de dados")
 		return err
@@ -78,7 +98,17 @@ func create_loan_in_db(request models.Request, w http.ResponseWriter) error {
 
 	// makes copy unavailable
 	copy.IsBorrowed = true
-	database.DB.Save(&copy)
+	err = database.DB.Save(&copy).Error
+	if err != nil {
+		slog.Warn(
+			"Erro ao atualizar cópia na base de dados",
+			"err", err,
+			"copy_id", copy.ID,
+		)
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintln(w, "Erro ao atualizar cópia na base de dados")
+		return err
+	}
 
 	return nil
 }

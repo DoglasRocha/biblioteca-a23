@@ -5,6 +5,7 @@ import (
 	"biblioteca-a23/models"
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -48,8 +49,10 @@ func CreateRequest(w http.ResponseWriter, r *http.Request) {
 	// validate request
 	err = request.Validate()
 	if err != nil {
-		fmt.Println(request)
-		fmt.Println(err)
+		slog.Warn(
+			"Erro ao validar solicitação de empréstimo",
+			"err", err,
+		)
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintln(w, "Erro ao validar solicitação")
 		return
@@ -58,6 +61,10 @@ func CreateRequest(w http.ResponseWriter, r *http.Request) {
 	// create request in db
 	err = database.DB.Create(&request).Error
 	if err != nil {
+		slog.Warn(
+			"Erro ao criar solicitação na base de dados",
+			"err", err,
+		)
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintln(w, "Erro ao criar solicitação")
 		return
@@ -102,6 +109,11 @@ func ApproveRequest(w http.ResponseWriter, r *http.Request) {
 		Where("id = ? AND is_accepted = ?", request_id, false).
 		First(&request).Error
 	if err != nil {
+		slog.Warn(
+			"Erro ao buscar solicitação na base de dados",
+			"err", err,
+			"request_id", request_id,
+		)
 		w.WriteHeader(http.StatusNotFound)
 		fmt.Fprintln(w, "Erro ao encontrar solicitacao de emprestimo")
 		return
@@ -118,7 +130,16 @@ func ApproveRequest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	request.IsAccepted = true
-	database.DB.Save(&request)
+	err = database.DB.Save(&request).Error
+	if err != nil {
+		slog.Warn(
+			"Erro ao atualizar solicitação na base de dados",
+			"err", err,
+		)
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintln(w, "Erro ao aceitar solicitação")
+		return
+	}
 
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintln(w, "Empréstimo aprovado com sucesso")
@@ -140,6 +161,11 @@ func DenyRequest(w http.ResponseWriter, r *http.Request) {
 		Where("id = ? AND is_accepted = ?", request_id, false).
 		First(&request).Error
 	if err != nil {
+		slog.Warn(
+			"Erro ao buscar solicitação na base de dados",
+			"err", err,
+			"request_id", request_id,
+		)
 		w.WriteHeader(http.StatusNotFound)
 		fmt.Fprintln(w, "Erro ao encontrar solicitacao de emprestimo")
 		return
@@ -148,6 +174,11 @@ func DenyRequest(w http.ResponseWriter, r *http.Request) {
 	// deletes request
 	err = database.DB.Delete(&request).Error
 	if err != nil {
+		slog.Warn(
+			"Erro ao deletar solicitação",
+			"err", err,
+			"request_id", request_id,
+		)
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintln(w, "Erro ao deletar solicitação")
 		return
@@ -155,4 +186,50 @@ func DenyRequest(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintln(w, "Solicitação rejeitada com sucesso")
+}
+
+func GetReaderRequests(w http.ResponseWriter, r *http.Request) {
+	var requests []models.Request
+
+	status := is_reader_authenticated(w, r)
+	if status != http.StatusOK {
+		return
+	}
+
+	reader_id, err := get_id_from_request_cookie(w, r)
+	if err != nil {
+		return
+	}
+
+	err = database.DB.Where(
+		"reader_id = ? AND is_accepted = ?",
+		reader_id, false,
+	).Find(&requests).Error
+	if err != nil {
+		slog.Warn(
+			"Erro ao buscar solicitações do usuário",
+			"err", err,
+			"reader_id", reader_id,
+		)
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintln(w, "Erro ao buscar solicitações do usuário")
+		return
+	}
+
+	for i := range requests {
+		err = database.PopulateRequest(&requests[i], requests[i].ID)
+		if err != nil {
+			slog.Warn(
+				"Erro ao popular solicitação",
+				"err", err,
+				"requests_id", requests[i].ID,
+			)
+			w.WriteHeader(http.StatusInternalServerError)
+			fmt.Fprintln(w, "Erro ao buscar solicitações do usuário")
+			return
+		}
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(&requests)
 }
