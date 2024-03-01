@@ -1,7 +1,8 @@
 import axios from "axios"
+import { PUBLIC_API_URL } from "$env/static/public"
 
 export const api = axios.create({
-    baseURL: "http://localhost:8080/api/",
+    baseURL: PUBLIC_API_URL,
     withCredentials: true,
     // headers: {
     //     //"Access-Control-Allow-Origin": "*",
