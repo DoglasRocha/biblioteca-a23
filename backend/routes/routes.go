@@ -30,7 +30,7 @@ func SetupRoutes() {
 		"Content-Language",
 		"Origin",
 	})
-	originsOk := handlers.AllowedOrigins([]string{"http://localhost:5173"})
+	originsOk := handlers.AllowedOrigins([]string{"https://biblioteca-a23.vercel.app"})
 	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"})
 	credentialsOk := handlers.AllowCredentials()
 
