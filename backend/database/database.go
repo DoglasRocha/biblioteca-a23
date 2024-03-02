@@ -17,7 +17,7 @@ var (
 func ConnectToDatabase() {
 
 	dsn := fmt.Sprintf(
-		"%s:%s@%s/%s?charset=utf8mb4&parseTime=True&loc=Local",
+		"%s:%s@tcp(%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		os.Getenv("MYSQL_USER"),
 		os.Getenv("MYSQL_PASSWORD"),
 		os.Getenv("MYSQL_URL"),
