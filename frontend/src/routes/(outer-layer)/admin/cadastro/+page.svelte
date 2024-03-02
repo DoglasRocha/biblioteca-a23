@@ -32,6 +32,7 @@
 
 		try {
 			let request = await api.post('/admin/cadastro', userData);
+			console.log(request);
 
 			if (request.status == 201) document.location.href = '/admin/login';
 		} catch (error) {
