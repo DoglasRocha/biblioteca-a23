@@ -25,7 +25,7 @@ func main() {
 	// loads environment variables
 	err = godotenv.Load(".env")
 	if err != nil {
-		panic("Error loading .env file")
+		slog.Error("Error loading .env file")
 	}
 
 	// init database
