@@ -3,6 +3,7 @@ package routes
 import (
 	"log"
 	"net/http"
+	"os"
 
 	//"biblioteca-a23/models"
 	//"fmt"
@@ -34,7 +35,7 @@ func SetupRoutes() {
 	credentialsOk := handlers.AllowCredentials()
 
 	log.Fatal(http.ListenAndServe(
-		":8080",
+		":"+os.Getenv("PORT"),
 		handlers.CORS(headersOk, originsOk, methodsOk, credentialsOk)(router),
 	))
 }
