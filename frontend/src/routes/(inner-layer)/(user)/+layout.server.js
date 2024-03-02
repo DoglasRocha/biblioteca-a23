@@ -22,6 +22,9 @@ export async function load({ cookies }) {
         
         else if (error.response.status == 401)
             redirect(303, "/login")
+
+        else
+            redirect(303, '/error')
     }
 
     return {}
