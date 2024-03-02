@@ -1,6 +1,10 @@
 import { redirect } from "@sveltejs/kit";
 import { api } from "$lib/utils/api.js";
 
+export const config = {
+    runtime: 'edge'
+}
+
 export async function load({ cookies }) {
 
     const accessToken = cookies.get("accessToken")
