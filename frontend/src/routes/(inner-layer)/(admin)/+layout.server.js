@@ -10,12 +10,14 @@ export async function load({ cookies }) {
     const accessToken = cookies.get("accessToken")
 
     try {
-        await api.post("admin/check", {}, {
+        let request = await api.post("admin/check", {}, {
             withCredentials: true,
             headers: {
                 Cookie: `accessToken=${accessToken}`,
             }
         })
+
+        console.log(request)
     } catch (error) {
         console.log(error)
         if (error?.code == 'ECONNREFUSED')
