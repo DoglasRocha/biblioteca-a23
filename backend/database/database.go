@@ -17,9 +17,11 @@ var (
 func ConnectToDatabase() {
 
 	dsn := fmt.Sprintf(
-		"%s:%s@tcp(127.0.0.1:3306)/biblioteca?charset=utf8mb4&parseTime=True&loc=Local",
+		"%s:%s@tcp(%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		os.Getenv("MYSQL_USER"),
 		os.Getenv("MYSQL_PASSWORD"),
+		os.Getenv("MYSQL_URL"),
+		os.Getenv("MYSQL_DATABASE"),
 	)
 
 	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
