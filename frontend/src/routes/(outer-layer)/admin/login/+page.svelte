@@ -1,6 +1,7 @@
 <script>
 	import FormField from '$lib/components/form-field.svelte';
 	import Card from '$lib/components/card.svelte';
+	import BlankForm from '$lib/components/blank-form.svelte';
 	import { api } from '$lib/utils/api';
 
 	let loginFields = {
@@ -12,7 +13,7 @@
 	const handleSubmit = async () => {
 		try {
 			const request = await api.post('/login', loginFields);
-			console.log(request);				
+			console.log(request);
 
 			if (request.status == 200) document.location.href = '/admin';
 		} catch (error) {
@@ -32,7 +33,7 @@
 		<h3>Login Admin</h3>
 	</div>
 
-	<form>
+	<BlankForm>
 		<FormField
 			label="Endereço de Email"
 			name="email"
@@ -65,7 +66,7 @@
 				}}>Login</button
 			>
 		</div>
-	</form>
+	</BlankForm>
 </Card>
 
 <style>
