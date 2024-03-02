@@ -17,6 +17,7 @@ export async function load({ cookies }) {
             }
         })
     } catch (error) {
+        console.log(error)
         if (error?.code == 'ECONNREFUSED')
             redirect(303, "/error")
 
