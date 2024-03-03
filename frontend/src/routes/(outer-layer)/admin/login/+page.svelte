@@ -13,7 +13,6 @@
 	const handleSubmit = async () => {
 		try {
 			const request = await api.post('/login', loginFields);
-			console.log(request);
 
 			if (request.status == 200) document.location.href = '/admin';
 		} catch (error) {
