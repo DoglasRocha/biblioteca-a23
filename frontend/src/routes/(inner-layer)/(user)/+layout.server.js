@@ -6,13 +6,14 @@ export async function load({ cookies }) {
     const accessToken = cookies.get("accessToken")
 
     try {
-        await api.post("/check", {}, {
+        let request = await api.post("/check", {}, {
             withCredentials: true,
             headers: {
                 Cookie: `accessToken=${accessToken}`,
             }
         })
         
+        console.log(request)
     } catch (error) {
         if (error?.code == 'ECONNREFUSED')
             redirect(303, "/error")
