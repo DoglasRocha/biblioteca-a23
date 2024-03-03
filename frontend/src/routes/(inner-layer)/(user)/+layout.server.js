@@ -4,6 +4,7 @@ import { api } from "$lib/utils/api.js"
 export async function load({ cookies }) {
 
     const accessToken = cookies.get("accessToken")
+    console.log(accessToken)
 
     try {
         let request = await api.post("/check", {}, {
