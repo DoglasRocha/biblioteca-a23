@@ -27,7 +27,8 @@ func create_cookie(key string, value string) http.Cookie {
 		Secure:   true,
 		HttpOnly: false,
 		Path:     "/",
-		SameSite: http.SameSiteDefaultMode,
+		SameSite: http.SameSiteLaxMode,
+		Domain:   "a23cursinho.live",
 	}
 
 	return cookie
