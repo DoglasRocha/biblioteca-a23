@@ -27,7 +27,7 @@ func create_cookie(key string, value string) http.Cookie {
 		Secure:   true,
 		HttpOnly: false,
 		Path:     "/",
-		SameSite: http.SameSiteNoneMode,
+		SameSite: http.SameSiteDefaultMode,
 	}
 
 	return cookie
