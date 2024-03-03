@@ -3,7 +3,7 @@ import { api } from "$lib/utils/api.js";
 
 export async function load({ cookies }) {
 
-    console.log(cookies);
+    console.log('coookies', cookies);
     const accessToken = cookies.get("accessToken")
     console.log(accessToken)
 
