@@ -263,6 +263,10 @@ func DeleteBook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	slog.Info(
+		"Livro deletado",
+		"book_id", book_id,
+	)
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintln(w, "Livro deletado")
 }
