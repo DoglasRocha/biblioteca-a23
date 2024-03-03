@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	//"biblioteca-a23/models"
 	//"fmt"
@@ -30,7 +31,8 @@ func SetupRoutes() {
 		"Content-Language",
 		"Origin",
 	})
-	originsOk := handlers.AllowedOrigins([]string{"https://biblioteca-a23.vercel.app", "https://biblioteca.a23cursinho.live", "https://dev.biblioteca.a23cursinho.live"})
+	origins := strings.Split(os.Getenv("ALLOWED_ORIGINS"), ",")
+	originsOk := handlers.AllowedOrigins(origins)
 	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"})
 	credentialsOk := handlers.AllowCredentials()
 
