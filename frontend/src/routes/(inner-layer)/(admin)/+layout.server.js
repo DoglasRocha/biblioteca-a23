@@ -16,7 +16,7 @@ export async function load({ cookies }) {
         console.log(request)
     } catch (error) {
         if (error?.code == 'ECONNREFUSED')
-            redirect(303, "/error")
+            redirect(303, "/admin/error")
 
         else if (error.response.status == 403) 
             redirect(303, "/")
@@ -25,10 +25,10 @@ export async function load({ cookies }) {
             redirect(303, "/admin/login")
 
         else if (error.response.status == 406)
-            redirect(303, "/error")
+            redirect(303, "/admin/error")
 
         else
-            redirect(303, '/error')
+            redirect(303, '/admin/error')
     }
 
     return {}
