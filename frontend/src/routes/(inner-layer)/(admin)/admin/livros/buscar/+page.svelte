@@ -20,6 +20,8 @@
 			error = true;
 		}
 	};
+
+	let deleteError;
 </script>
 
 <Card class="w-75">
@@ -55,11 +57,19 @@
 												'Você tem certeza que deseja deletar esse livro e todas as suas cópias?'
 											);
 											if (confirmation) {
-												await api.delete(`/admin/livros/deletar/${book.id}`);
-												document.location.href = document.location.href + '/';
+												try {
+													let request = await api.delete(`/admin/livros/deletar/${book.id}`);
+
+													if (request.status == 200)
+														document.location.href = document.location.href + '/';
+												} catch (error) {
+													deleteError = error.response.data;
+												}
 											}
-										}}>Deletar</button
+										}}
 									>
+										Deletar
+									</button>
 								</BookInTable>
 							</td>
 						</tr>
@@ -68,6 +78,12 @@
 							<td> Não há livros!! </td>
 						</tr>
 					{/each}
+					{#if deleteError}
+						<div>
+							<p class="text-danger">Ops, aconteceu um erro. Talvez isso ajude:</p>
+							<p class="text-danger">{deleteError}</p>
+						</div>
+					{/if}
 				{/if}
 			</tbody>
 		</table>
