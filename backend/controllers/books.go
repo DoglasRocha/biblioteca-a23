@@ -195,3 +195,74 @@ func UpdateBook(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintln(w, "Livro atualizado com sucesso")
 }
+
+func DeleteBook(w http.ResponseWriter, r *http.Request) {
+	var book models.Book
+
+	status := is_admin_authenticated(w, r)
+	if status != http.StatusOK {
+		return
+	}
+
+	// get parameters
+	book_id := mux.Vars(r)["book_id"]
+
+	// check if book exists
+	err := database.DB.First(&book, book_id).Error
+	if err != nil {
+		slog.Warn(
+			"Não há livro com esse id",
+			"err", err,
+			"book_id", book_id,
+		)
+		w.WriteHeader(http.StatusNotFound)
+		fmt.Fprintln(w, "Não há livro com esse identificador")
+		return
+	}
+
+	// check if book has borrowed copies
+	var borrowed_copies int64
+	err = database.DB.
+		Where("book_id = ? AND is_borrowed = ?", book_id, true).
+		Find(&[]models.Copy{}).
+		Count(&borrowed_copies).Error
+	if err != nil || borrowed_copies != 0 {
+		slog.Warn(
+			"Não é possivel deletar o livro, pois há cópias emprestadas",
+			"err", err,
+			"book_id", book_id,
+		)
+		w.WriteHeader(http.StatusNotFound)
+		fmt.Fprintln(w, "Não é possivel deletar o livro, pois há cópias emprestadas")
+		return
+	}
+
+	// delete copies
+	err = database.DB.Where("book_id = ?", book_id).Delete(&[]models.Copy{}).Error
+	if err != nil {
+		slog.Warn(
+			"Erro ao deletar cópias do livro",
+			"err", err,
+			"book_id", book_id,
+		)
+		w.WriteHeader(http.StatusNotFound)
+		fmt.Fprintln(w, "Erro ao deletar cópias do livro")
+		return
+	}
+
+	// delete book
+	err = database.DB.Delete(&book).Error
+	if err != nil {
+		slog.Warn(
+			"Erro ao deletar livro",
+			"err", err,
+			"book_id", book_id,
+		)
+		w.WriteHeader(http.StatusNotFound)
+		fmt.Fprintln(w, "Erro ao deletar livro")
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintln(w, "Livro deletado")
+}
