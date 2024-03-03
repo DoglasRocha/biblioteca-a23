@@ -14,7 +14,7 @@
 		try {
 			const request = await api.post('/login', loginFields);
 
-			//if (request.status == 200) document.location.href = '/';
+			if (request.status == 200) document.location.href = '/';
 		} catch (error) {
 			errorFromServer = error.response.data;
 		}
