@@ -55,7 +55,7 @@
 												'Você tem certeza que deseja deletar esse livro e todas as suas cópias?'
 											);
 											if (confirmation) {
-												//await api.delete(`/admin/livros/deletar/${book.id}`);
+												await api.delete(`/admin/livros/deletar/${book.id}`);
 												document.location.href = document.location.href + '/';
 											}
 										}}>Deletar</button
