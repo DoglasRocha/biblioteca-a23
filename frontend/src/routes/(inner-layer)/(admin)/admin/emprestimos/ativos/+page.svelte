@@ -1,7 +1,7 @@
 <script>
 	import Card from '$lib/components/card.svelte';
 	import Loan from '$lib/components/loan.svelte';
-	import { api } from '$lib/utils/api.js';
+	import { api } from '$lib/utils/login.js';
 	export let data;
 
 	let loans = data.loans,

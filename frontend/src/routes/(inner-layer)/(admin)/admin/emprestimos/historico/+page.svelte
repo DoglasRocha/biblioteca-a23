@@ -1,6 +1,6 @@
 <script>
 	import Card from '$lib/components/card.svelte';
-	import Loan from '../../../../../../lib/components/loan.svelte';
+	import Loan from '$lib/components/loan.svelte';
 
 	export let data;
 	let loans = data.loans,

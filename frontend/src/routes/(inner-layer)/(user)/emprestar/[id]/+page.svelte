@@ -1,6 +1,6 @@
 <script>
 	import Card from '$lib/components/card.svelte';
-	import { api } from '$lib/utils/api.js';
+	import { api } from '$lib/utils/login.js';
 
 	export let data;
 

@@ -1,7 +1,7 @@
 <script>
 	import Card from '$lib/components/card.svelte';
 	import Bold from '$lib/components/bold.svelte';
-	import { api } from '$lib/utils/api.js';
+	import { api } from '$lib/utils/login.js';
 	export let data;
 
 	let admins = data.admins,

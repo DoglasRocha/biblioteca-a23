@@ -3,7 +3,7 @@
 	import Card from '$lib/components/card.svelte';
 	import BlankForm from '$lib/components/blank-form.svelte';
 	import { isValidUserInput } from '$lib/utils/helpers.js';
-	import { api } from '$lib/utils/api.js';
+	import { api } from '$lib/utils/login.js';
 	export let data;
 
 	let userData = data.userData;
