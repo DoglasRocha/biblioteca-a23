@@ -2,6 +2,7 @@ package routes
 
 import (
 	"log"
+	"log/slog"
 	"net/http"
 	"os"
 	"strings"
@@ -31,7 +32,12 @@ func SetupRoutes() {
 		"Content-Language",
 		"Origin",
 	})
+
 	origins := strings.Split(os.Getenv("ALLOWED_ORIGINS"), ",")
+	slog.Info(
+		"ALLOWED_ORIGINS",
+		"ORIGINS", origins,
+	)
 	originsOk := handlers.AllowedOrigins(origins)
 	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"})
 	credentialsOk := handlers.AllowCredentials()
